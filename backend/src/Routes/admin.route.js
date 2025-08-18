@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.post("/adminlogin", adminLogin);
 router.post("/addstudent", adminMiddleware, addStudent);
-router.get("/viewstudents", adminMiddleware, adminViewAllStudents);
+router.get("/viewstudents", adminViewAllStudents);
 router.put("/updatestudent/:studentId", adminMiddleware, UpdateStudent);
 router.delete("/deletestudent/:studentId", adminMiddleware, deleteStudent);
-router.delete("/takeattendance", adminMiddleware, takeAttendance);
+router.post("/takeattendance", takeAttendance);
 
 export default router;

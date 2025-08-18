@@ -1,15 +1,18 @@
 import express from 'express';
 import dotenv from 'dotenv'
 import connectDB from './src/DB/connectDB.js';
-import addstudent from './src/Routes/admin.route.js'
+import admin from './src/Routes/admin.route.js'
+import student from './src/Routes/student.route.js'
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import { v2 as cloudinary } from 'cloudinary'
+import cors from 'cors'
+import cookieParser from 'cookie-parser';
 
 dotenv.config({
     path:'./env'
 })
-
+connectDB();
 const app=express();
 const PORT= process.env.PORT ;
 
@@ -22,6 +25,16 @@ app.use(fileUpload({
 //configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(cors());
+app.use(cookieParser());
+
+const corsOptions = {
+  origin: 'http://localhost:5173', // Your frontend origin
+  credentials: true, // Allow credentials (cookies)
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+};
+
+app.use(cors(corsOptions));
 
 //cloudinary configuration
  cloudinary.config({ 
@@ -30,10 +43,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
         api_secret: process.env.CLOUDINARY_API_SECRET
     });
 
-connectDB();
+ 
 
 //admin
-app.use('/api/v1/admin',addstudent);
+app.use('/api/v1/admin',admin);
+app.use('/api/v1/student',student);
 
 app.listen(PORT,()=>{
     console.log('Server running on port',PORT);

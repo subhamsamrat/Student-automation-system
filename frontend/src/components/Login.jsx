@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form"
+import axios from 'axios'
 
 
 function Login() {
@@ -11,18 +12,34 @@ function Login() {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = async(data)=>{
+    try {
+      const response=await axios.post("http://localhost:4000/api/v1/student/studentlogin",data, {
+          withCredentials: true,
+          headers: { "content-type": "application/json" },
+        } )
+       
+    //     if (response.data.token) {
+    //   localStorage.setItem("token", response.data.token);
+    // }
+    if (response.data.user) {
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+    }
+       
+    alert(response.data.message);
+    document.getElementById('login_modal').close();
+    window.location.reload();
+    } catch (error) {
+      console.log('ERROR !! in login.jsx',error);
+      alert(error.response.data.error || "something went wrong please try again later");
+    }
+  }
 
-  // useEffect(() => {
-  //   const modal = document.getElementById('login_modal')
-  //   if (modal) {
-  //     modal.showModal()
-  //   }
-  // }, [])
+
   return (
     <>
-      <dialog id="login_modal" className="modal">
-    <div className="modal-box bg-gradient-to-r from-blue-600 ">
+      <dialog id="login_modal" className="modal ">
+    <div className="modal-box bg-gradient-to-r from-blue-600">
     
       <button 
         onClick={() => document.getElementById('login_modal').close()}
@@ -33,13 +50,13 @@ function Login() {
         <p className='text-sm'>Email</p>
          <input
           {...register("email", { required: true })}
-         type="email" placeholder='Enter your email' className='h-10 w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200' />
+         type="email" placeholder='Enter your email' className='h-10 md:w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200' />
                {errors.email && <span className='text-red-500 text-sm'>Email is required</span>}
 
          <p className='text-sm mt-5'>Password</p>
        <input
          {...register("password", { required: true })}
-         type="password" placeholder='Enter Password' className='h-10 w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200' />
+         type="password" placeholder='Enter Password' className='h-10 md:w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200' />
                {errors.password && <span className='text-red-500 text-sm'>Password is required</span>}
       </div>
       <div className='flex justify-between mt-15'>

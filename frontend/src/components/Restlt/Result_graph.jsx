@@ -41,12 +41,102 @@ function Result_graph() {
    average: 30,
    ststus:'pass'
   },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
+  {
+ name: 'John Doe',
+   rollNo: '12345',
+   average: 30,
+   ststus:'pass'
+  },
 ];
 
   return (
     <>
-       <div className='bg-amber-100  h-full  text-black p-10'>
-           <table className="table w-full   ">
+       <div className='bg-amber-100  h-full md:w-full w-109 text-black p-10'>
+           <table className="table">
              <thead>
                <tr className='bg-slate-300 text-black  sticky top-18'>
                  <th>Name</th>
@@ -56,7 +146,7 @@ function Result_graph() {
                   <th>Status</th>
                </tr>
              </thead>
-             <tbody >
+             <tbody className=''>
                {
                 data.map((item,index)=>(
                   <tr key={index} className=''>

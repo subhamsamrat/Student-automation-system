@@ -76,7 +76,6 @@ const studentSchema=new mongoose.Schema({
 
 },{timestamps:true})
 
+const StudentSchema=mongoose.model('student',studentSchema);
 
-const student=mongoose.model('student',studentSchema);
-
-export default student
+export default StudentSchema;

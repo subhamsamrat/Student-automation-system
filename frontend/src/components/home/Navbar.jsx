@@ -2,6 +2,7 @@ import { LogIn } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Login from "../Login";
+import Profile from "../Profile";
 
 function Navbar() {
   const navitem = (
@@ -21,6 +22,18 @@ function Navbar() {
     </>
   );
   const [sticky, setStikey] = useState(false);
+  const [user,setUser]= useState();
+  
+   const localUser = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+
+    if (localUser) {
+      setUser(true);
+    }else{
+      setUser(false);
+    }
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -29,6 +42,9 @@ function Navbar() {
         setStikey(false);
       }
     };
+
+    
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -37,7 +53,7 @@ function Navbar() {
   return (
     <>
       <div
-        className={`z-999 bg-base-300 h-18 shadow-sm  ${
+        className={`z-999 bg-base-300 h-18 w-full  shadow-sm  ${
           sticky
             ? "  shadow-md bg-base-300 duration-300 sticky top-0 transition-all ease-in-out"
             : ""
@@ -82,8 +98,26 @@ function Navbar() {
             <ul className="menu menu-horizontal px-1 ml-200">{navitem}</ul>
           </div>
           <div>
+            {user ? (
+              <div>
+                <button 
+                onClick={() => document.getElementById("profile_modal").showModal()}
+                className="btn btn-ghost btn-circle">
+                  <div className="indicator">
+                    <img
+                      src={localUser.image.url}
+                      alt=""
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  </div>
+                
+                </button>
+                  <Profile />
+              </div>
+            ) : (
+              <div>
                 <a
-                  className="bg-black text-white px-3 py-2 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
+                  className="bg-black text-white px-3 py-2 md:ml-0 ml-25 rounded-md hover:bg-slate-800 duration-300 cursor-pointer"
                   onClick={() =>
                     document.getElementById("login_modal").showModal()
                   }
@@ -91,7 +125,11 @@ function Navbar() {
                   Login
                 </a>
                 <Login/>
-              </div>
+              </div> 
+            )}
+            <Login />
+          </div>
+
         </div>
       </div>
     </>
@@ -99,3 +137,5 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
