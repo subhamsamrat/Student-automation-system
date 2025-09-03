@@ -327,7 +327,6 @@ export const deleteStudent = async (req, res) => {
 //take attendance
 export const takeAttendance = async (req, res) => {
   const { attendance, department, date, year } = req.body;
-  //console.log('attendance:',attendance.map((e)=>(e.stdId)));
   try {
     if (
       !attendance ||
@@ -348,11 +347,6 @@ export const takeAttendance = async (req, res) => {
         .status(404)
         .json({ error: "Attendance already marked for this date" });
     }
-
-    // const check=  attendance.some(e => e.stdId || e.status);
-
-    //         console.log('check',check);
-
     const newAttendance = new AttendanceSchema({
       attendance,
       department,

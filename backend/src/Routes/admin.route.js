@@ -16,6 +16,6 @@ router.post("/addstudent", adminMiddleware, addStudent);
 router.get("/viewstudents", adminViewAllStudents);
 router.put("/updatestudent/:studentId", adminMiddleware, UpdateStudent);
 router.delete("/deletestudent/:studentId", adminMiddleware, deleteStudent);
-router.post("/takeattendance", takeAttendance);
+router.post("/takeattendance",adminMiddleware, takeAttendance);
 
 export default router;

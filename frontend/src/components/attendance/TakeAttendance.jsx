@@ -11,6 +11,7 @@ const TakeAttendance = () => {
   const [attendance, setAttendance] = useState([]);
   const [totalPresent,setTotalPresent]=useState(0);
   const [totalAbsent,setTotalAbsent]=useState(0);
+  const [bg,setBg]=useState(false);
 
   //get student data from backend ...........
   const data = async () => {
@@ -42,7 +43,6 @@ const TakeAttendance = () => {
       attendance,
     };
 //calculating total present and absent
-
      setTimeout(() => {
        let present = 0;
        let absent = 0;
@@ -56,27 +56,42 @@ const TakeAttendance = () => {
        setTotalPresent(present);
        setTotalAbsent(absent);
      },500);
+
+     
  
   //handle attendance
   const handleAttendance = (studentId, isPresent) => {
     const updatedAttendance = [...attendance];
+   function removeObj(array,id){
+      const index = array.findIndex(item => item.stdId === id);
+      if (index !== -1) {
+        array.splice(index, 1);
+      }
+      console.log('array',array);
+      
+      return array;
+    }
+    removeObj(updatedAttendance,studentId);
+
     updatedAttendance.push({
       stdId: studentId,
       status: isPresent,
     });
-    
     setAttendance(updatedAttendance);
+    
   };
 
+
+  //post attendancev reports
 const handleSubmit=async(e)=>{
   e.preventDefault();
   try {
-     if(!TakeAttendance && TakeAttendance.department === '' || TakeAttendance.year === '' || TakeAttendance.date === '' || TakeAttendance.attendance.length===0) {
+     if(!TakeAttendance && TakeAttendance.department === '' || TakeAttendance.year === '' || TakeAttendance.date === '' ) {
        alert("Please fill all the fields");
        return;
      }
        if(fetchstd.length !== TakeAttendance.attendance.length){
-       alert("Please mark attendance for all students");
+       alert("Please mark atten dance for all students");
        return;
      }
     await axios.post("http://localhost:4000/api/v1/admin/takeattendance", TakeAttendance);
@@ -175,23 +190,37 @@ const handleSubmit=async(e)=>{
                       <td>{item.rollNo}</td>
                       <td>
                         <div>
-                          <button
-                            onClick={() => handleAttendance(item._id, true)}
-                            className={`${
-                              attendance._id === item.id &&
-                              attendance.status == true
-                                ? "text-white bg-green-500 btn"
-                                : "text-green-500 btn "
-                            }`}
+                          {/* <button
+                            onClick={() => {handleAttendance(item._id, true)}}
+                           className={`btn text-green-500`}
                           >
                             P
-                          </button>
-                          <button
+                          </button> */}
+                          {(() => {
+                            const currentStatus = attendance.find(a => a.stdId === item._id)?.status;
+                            return (
+                              <>
+                                <button
+                                  onClick={() => handleAttendance(item._id, true)}
+                                  className={`btn ${currentStatus === true ? 'bg-green-500 text-white' : 'bg-transparent text-green-500'}`}
+                                >
+                                  P
+                                </button>
+                                <button
+                                  onClick={() => handleAttendance(item._id, false)}
+                                  className={`btn ml-2 ${currentStatus === false ? 'bg-red-500 text-white' : 'bg-transparent text-red-500'}`}
+                                >
+                                  A
+                                </button>
+                              </>
+                            );
+                          })()}
+                          {/* <button
                             onClick={() => handleAttendance(item._id, false)}
                             className="text-red-500 btn ml-2"
                           >
                             A
-                          </button>
+                          </button> */}
                         </div>
                       </td>
                     </tr>

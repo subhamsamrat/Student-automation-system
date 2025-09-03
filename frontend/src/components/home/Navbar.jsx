@@ -42,9 +42,6 @@ function Navbar() {
         setStikey(false);
       }
     };
-
-    
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);

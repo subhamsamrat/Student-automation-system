@@ -3,9 +3,9 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 function Attendance_2() {
   const data = [
-    { name: "Group A", value: 50 },
-    { name: "Group B", value: 90 },
-    { name: "Group C", value: 100 },
+    { name: "Group A", value: 5 },
+    { name: "Group B", value: 5 },
+    { name: "Group C", value: 20 },
     // { name: 'Group D', value: 200 },
   ];
 
@@ -38,7 +38,6 @@ function Attendance_2() {
   };
 
      const [mob, setMob] = useState(false);
-     console.log('width', window.innerWidth);
      useEffect(() => {
        if (window.innerWidth > 450) {
          setMob(true);

@@ -3,7 +3,7 @@
  function Profile() {
 const localUser=JSON.parse(localStorage.getItem("user"));
 //  console.log('user',JSON.parse(localUser));
-console.log(localUser);
+//console.log(localUser);
 
    return (
     <>

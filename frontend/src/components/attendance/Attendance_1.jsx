@@ -1,3 +1,5 @@
+import axios from "axios";
+import { Cookie } from "lucide-react";
 import React, { PureComponent, useEffect, useState } from "react";
 import {
   BarChart,
@@ -11,8 +13,9 @@ import {
 } from "recharts";
 function Attendance_1() {
 
+  //this is for responsiveness
   const [mob, setMob] = useState('');
-  console.log('width', window.innerWidth);
+
   useEffect(() => {
     if (window.innerWidth > 450) {
       setMob(true);
@@ -21,6 +24,16 @@ function Attendance_1() {
       setMob(false);
     }
   }, []);
+
+useEffect(()=>{
+     (
+      async()=>{
+        const response=await axios.get('http://localhost:4000/api/v1/student/attendance');
+      }
+     )();   
+    // console.log(cookieStore.getItem('token'));
+    
+},[])  
 
   const std = [{ p: 12, a: 16 }];
   const data = [
@@ -53,6 +66,36 @@ function Attendance_1() {
       name: "june",
       present: 23,
       absent: 7,
+    },
+    {
+      name: "july",
+      present: 15,
+      absent: 15,
+    },
+    {
+      name: "august",
+      present: 20,
+      absent: 10,
+    },
+    {
+      name: "september",
+      present: 25,
+      absent: 5,
+    },
+    {
+      name: "october",
+      present: 30,
+      absent: 0,
+    },
+    {
+      name: "november",
+      present: 28,
+      absent: 2,
+    },
+    {
+      name: "december",
+      present: 0,
+      absent: 0,
     },
   ]; 
 

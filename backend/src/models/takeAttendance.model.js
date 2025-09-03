@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const attendanceSchema=new mongoose.Schema({
           date:{
-            type:String,
+            type:Date,
             required:true,
           },
           department:{
@@ -28,4 +28,4 @@ const attendanceSchema=new mongoose.Schema({
           ],
 },{timestamps:true})
 
-export const AttendanceSchema=mongoose.model('takeattendance',attendanceSchema);
+export  const AttendanceSchema=mongoose.model('takeattendance',attendanceSchema);
