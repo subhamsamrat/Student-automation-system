@@ -137,7 +137,7 @@ export const attendance = async (req, res) => {
       year: user.year,
       department: user.department,
     });
-      
+       // const jan=Object.groupBy(response,(item)=>())
       
       
     return res.status(200).json({ message: "ok" },response);

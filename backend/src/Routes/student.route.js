@@ -7,6 +7,6 @@ const router=express.Router();
 router.get('/students',students)
 router.post('/studentsignup',studentSignup);
 router.post('/studentlogin',studentLogin);
-router.get('/attendance',attendance);
+router.get('/attendance',studentMiddleware,attendance);
 
 export default router;

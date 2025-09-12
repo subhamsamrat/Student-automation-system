@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import axios from 'axios'
 
@@ -16,18 +16,16 @@ function Login() {
     try {
       const response=await axios.post("http://localhost:4000/api/v1/student/studentlogin",data, {
           withCredentials: true,
-          headers: { "content-type": "application/json" },
+          headers: { "content-type": "application/json" }, credentials: 'include',
         } )
-       
-    //     if (response.data.token) {
-    //   localStorage.setItem("token", response.data.token);
-    // }
+  
     if (response.data.user) {
       localStorage.setItem("user", JSON.stringify(response.data.user));
     }
        
     alert(response.data.message);
     document.getElementById('login_modal').close();
+    <Navigate to='/'/>
     window.location.reload();
     } catch (error) {
       console.log('ERROR !! in login.jsx',error);

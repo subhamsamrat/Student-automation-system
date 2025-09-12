@@ -74,7 +74,7 @@ function Signup() {
                   }
                 >
                   Login
-                </a>
+                </a>  
                
             </div>
                    </div>
