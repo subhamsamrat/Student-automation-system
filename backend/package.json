@@ -7,7 +7,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config --experimental-json-modules index.js"
+    "watch": ["src", "index.js"],
+  "ext": "js,json",
+  "exec": "node index.js",
+  "delay": "500",
+    "start": "nodemon index.js"
+    
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -19,6 +24,6 @@
     "express-fileupload": "^1.5.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
-    "nodemon": "^3.1.10"
+    "nodemon":"^3.1.10"
   }
 }

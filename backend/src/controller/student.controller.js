@@ -127,20 +127,124 @@ export const studentLogin = async (req, res) => {
   }
 };
 
-//student attendance
-export const attendance = async (req, res) => {
-  const studentId = req.studentId;
+// //student attendance
+// export const attendance = async (req, res) => {
+//   const studentId = req.studentId;
 
+//   try {
+//     const user = await studentSchema.findById(studentId);
+//     const response = await AttendanceSchema.find({
+//       year: user.year,
+//       department: user.department,
+//     });    
+//     const july=[];
+//     let present=0,absent=0;
+//     response.map((e)=>{
+//     if(e.date.getMonth() === 6){
+//       july.push(e.attendance);
+//     }
+      
+//     })
+   
+//    const newJuly=july.flat(Infinity);
+   
+//    newJuly.forEach((e)=>{  
+//    if(e.stdId.equals(studentId)){
+//          if(e.status===true){
+//              present+=1;
+//          }else{
+//           absent+=1;
+//          }
+    
+//          }
+//    })
+//    console.log('present=',present,'   ','absent=',absent);
+   
+//     return res.status(200).json({ message: "ok",data:response});
+//   }
+//    catch (error) {
+//     console.log("ERROR !! in student attendance", error);
+//     res.status(500).json({ error: "internal server error" });
+//   }
+// }; 
+
+export const attendance = async (req, res) => {
   try {
+    const studentId = req.studentId;
     const user = await studentSchema.findById(studentId);
+
+    // Fetch all students of same dept/year
+    const allStudents = await studentSchema.find({
+      year: user.year,
+      department: user.department,
+    });
+
+    // Fetch attendance records of that dept/year
     const response = await AttendanceSchema.find({
       year: user.year,
       department: user.department,
     });
-       // const jan=Object.groupBy(response,(item)=>())
-      
-      
-    return res.status(200).json({ message: "ok" },response);
+
+    // Month names for display
+    const months = [
+      "january", "february", "march", "april", "may", "june",
+      "july", "august", "september", "october", "november", "december"
+    ];
+
+    // 1) Logged-in student stats (monthly present/absent)
+    const myStats = months.map(m => ({ name: m, present: 0, absent: 0 }));
+
+    response.forEach((record) => {
+      const month = record.date.getMonth();
+      record.attendance.forEach((att) => {
+        if (att.stdId.equals(studentId)) {
+          if (att.status === true) {
+            myStats[month].present += 1;
+          } else {
+            myStats[month].absent += 1;
+          }
+        }
+      });
+    });
+
+   
+    // 2) All students yearly percentage
+    const allStudentsStats = [];
+
+    for (const student of allStudents) {
+      let present = 0;
+      let absent = 0;
+
+      response.forEach((record) => {
+        record.attendance.forEach((att) => {
+          if (att.stdId.equals(student._id)) {
+            if (att.status === true) {
+              present += 1;
+            } else {
+              absent += 1;
+            }
+          }
+        });
+      });
+
+      const total = present + absent;
+      const percentage = total > 0 ? (present / total) * 100 : 0;
+
+      allStudentsStats.push({
+        studentId: student._id,
+        studentName: student.name, 
+        percentage: percentage.toFixed(2),
+      });
+    }
+
+  
+    // Final response
+    return res.status(200).json({
+      message: "ok",
+      myStats,          //logged-in student monthly stats
+      allStudentsStats, //each student yearly percentage
+    });
+
   } catch (error) {
     console.log("ERROR !! in student attendance", error);
     res.status(500).json({ error: "internal server error" });

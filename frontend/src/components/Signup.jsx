@@ -26,7 +26,7 @@ function Signup() {
 
       console.log('ERROR !! in signup.jsx',error);
       alert(error.response.data.error || "something went wrong please try again later");     
-    }
+    } 
              
     
   }

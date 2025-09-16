@@ -33,8 +33,8 @@ const user=useContext(authContext);
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/profile' element={<Profile/>}/>
-        <Route path='/result' element={<Result/>}/>
-        <Route path='/account' element={<Account/>}/>
+        <Route path='/result' element={ user?<Result/>:<Navigate to='/signup'/>}/>
+        <Route path='/account' element={ user?<Account/>:<Navigate to='/signup'/>}/>
         <Route path='/take' element={<TakeAttendance/>}/>
        </Routes>
        

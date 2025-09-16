@@ -3,7 +3,8 @@
  function Profile() {
 const localUser=JSON.parse(localStorage.getItem("user"));
 
-
+  const date =new Date(localUser.DOB);
+  
    return (
     <>
           <dialog id="profile_modal" className="modal">
@@ -19,23 +20,24 @@ const localUser=JSON.parse(localStorage.getItem("user"));
       </div>
       <section className=''>
         <h3 className='mt-3 text-xl text-blue-600 underline'>Academic Details</h3>
-        <div className='mt-1 '>
+        <div className='mt-0.5 '>
           <p className='hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Department :-</span>{localUser.department}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Roll No :-</span>{localUser.rollNo}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>state :-</span>{localUser.state}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>city :-</span>{localUser.city}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Year :-</span>{localUser.year}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Roll No :-</span>{localUser.rollNo}</p>
+          
         </div>
       </section>
       <section>
         <h3 className='mt-3 text-xl text-blue-600 underline'>Personal Details</h3>
-        <div className='mt-1'>
+        <div className='mt-0.5'>
           <p className='hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Email :-</span>{localUser.email}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Father Name :-</span>{localUser.parentName}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Phone :-</span>{localUser.phoneNo}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Parent Phone :-</span>{localUser.parentPhoneNo}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Date of Birth :-</span>{localUser.DOB}</p>
-          <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Gender :-</span>{localUser.gender}</p>
-
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span  className='font-semibold'>Father Name :-</span>{localUser.parentName}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Phone :-</span>{localUser.phoneNo}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Parent Phone :-</span>{localUser.parentPhoneNo}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Date of Birth :-</span>{date.toLocaleDateString()}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Gender :-</span>{localUser.gender}</p>
+           <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>state :-</span>{localUser.state}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>city :-</span>{localUser.city}</p>
         </div>
       </section>
       <button 

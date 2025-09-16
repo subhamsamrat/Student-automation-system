@@ -15,6 +15,7 @@ function Attendance_1() {
 
   //this is for responsiveness
   const [mob, setMob] = useState('');
+  const [data,setData]= useState();
 
   useEffect(() => {
     if (window.innerWidth > 450) {
@@ -28,76 +29,84 @@ function Attendance_1() {
 useEffect(()=>{
      (
       async()=>{
-        const response=await axios.get('http://localhost:4000/api/v1/student/attendance');
+        const response=await axios.get('http://localhost:4000/api/v1/student/attendance',{
+          withCredentials: true,
+          headers: { "content-type": "application/json" }, credentials: 'include',
+        });
+          const data=response.data.data;
+        setData(data);
+        
       }
      )();   
+     
+     
     // console.log(cookieStore.getItem('token'));
     
 },[])  
 
-  const std = [{ p: 12, a: 16 }];
-  const data = [
-    {
-      name: "january",
-      present: std[0].p,
-      absent: std[0].a,
-    },
-    {
-      name: "february",
-      present: 31,
-      absent: 13,
-    },
-    {
-      name: "march",
-      present: 20,
-      absent: 12,
-    },
-    {
-      name: "april",
-      present: 27,
-      absent: 2,
-    },
-    {
-      name: "may",
-      present: 18,
-      absent: 12,
-    },
-    {
-      name: "june",
-      present: 23,
-      absent: 7,
-    },
-    {
-      name: "july",
-      present: 15,
-      absent: 15,
-    },
-    {
-      name: "august",
-      present: 20,
-      absent: 10,
-    },
-    {
-      name: "september",
-      present: 25,
-      absent: 5,
-    },
-    {
-      name: "october",
-      present: 30,
-      absent: 0,
-    },
-    {
-      name: "november",
-      present: 28,
-      absent: 2,
-    },
-    {
-      name: "december",
-      present: 0,
-      absent: 0,
-    },
-  ]; 
+  // const std = [{ p: 12, a: 16 }];
+  // const data = [
+  //   {
+  //     name: "january",
+  //     present: std[0].p,
+  //     absent: std[0].a,
+  //   },
+  //   {
+  //     name: "february",
+  //     present: 31,
+  //     absent: 13,
+  //   },
+  //   {
+  //     name: "march",
+  //     present: 20,
+  //     absent: 12,
+  //   },
+  //   {
+  //     name: "april",
+  //     present: 27,
+  //     absent: 2,
+  //   },
+  //   {
+  //     name: "may",
+  //     present: 18,
+  //     absent: 12,
+  //   },
+  //   {
+  //     name: "june",
+  //     present: 23,
+  //     absent: 7,
+  //   },
+  //   {
+  //     name: "july",
+  //     present: 15,
+  //     absent: 15,
+  //   },
+  //   {
+  //     name: "august",
+  //     present: 20,
+  //     absent: 10,
+  //   },
+  //   {
+  //     name: "september",
+  //     present: 25,
+  //     absent: 5,
+  //   },
+  //   {
+  //     name: "october",
+  //     present: 30,
+  //     absent: 0,
+  //   },
+  //   {
+  //     name: "november",
+  //     present: 28,
+  //     absent: 2,
+  //   },
+  //   {
+  //     name: "december",
+  //     present: 0,
+  //     absent: 0,
+  //   },
+  // ]; 
 
 
 // ${mob ? '' : 'bg-gradient-to-l form-fuchsia-600 to-amber-400 text-[5vw]'}

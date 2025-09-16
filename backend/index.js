@@ -9,10 +9,11 @@ import { v2 as cloudinary } from 'cloudinary'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 
+//--experimental-json-modules         
+         
 dotenv.config({
-    path:'./env'
-})
-connectDB();
+    path:'./.env'
+}) 
 const app=express();
 const PORT= process.env.PORT ;
 
@@ -45,10 +46,26 @@ app.use(cors(corsOptions));
 
  
 
-//admin
+//routes
 app.use('/api/v1/admin',admin);
 app.use('/api/v1/student',student);
 
-app.listen(PORT,()=>{
-    console.log('Server running on port',PORT);
-} )
+// connectDB();console.log('db hit ');
+
+// app.listen(PORT,()=>{ 
+//     console.log('Server running on port',PORT);
+// } )
+
+const startServer = async () => {
+  try {
+    await connectDB();  // waits until DB is connected
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server failed to start ❌", error);
+    process.exit(1);
+  }
+};   
+
+startServer();
