@@ -4,11 +4,13 @@ import jwt from "jsonwebtoken";
 import config from "../../config.js";
 import signupSchema from "../models/stdSignup.model.js";
 import { AttendanceSchema } from "../models/takeAttendance.model.js";
+import { resultSchema } from "../models/addResult.model.js";  
+import { paymentSchema } from "../models/payment.model.js";
 
 //view student
 export const students = async (req, res) => {
   try {
-    const data = await student.find();
+    const data = await studentSchema.find();
 
     if (!data) {
       console.log("No data found");
@@ -127,47 +129,7 @@ export const studentLogin = async (req, res) => {
   }
 };
 
-// //student attendance
-// export const attendance = async (req, res) => {
-//   const studentId = req.studentId;
-
-//   try {
-//     const user = await studentSchema.findById(studentId);
-//     const response = await AttendanceSchema.find({
-//       year: user.year,
-//       department: user.department,
-//     });    
-//     const july=[];
-//     let present=0,absent=0;
-//     response.map((e)=>{
-//     if(e.date.getMonth() === 6){
-//       july.push(e.attendance);
-//     }
-      
-//     })
-   
-//    const newJuly=july.flat(Infinity);
-   
-//    newJuly.forEach((e)=>{  
-//    if(e.stdId.equals(studentId)){
-//          if(e.status===true){
-//              present+=1;
-//          }else{
-//           absent+=1;
-//          }
-    
-//          }
-//    })
-//    console.log('present=',present,'   ','absent=',absent);
-   
-//     return res.status(200).json({ message: "ok",data:response});
-//   }
-//    catch (error) {
-//     console.log("ERROR !! in student attendance", error);
-//     res.status(500).json({ error: "internal server error" });
-//   }
-// }; 
-
+//student attendance
 export const attendance = async (req, res) => {
   try {
     const studentId = req.studentId;
@@ -185,13 +147,12 @@ export const attendance = async (req, res) => {
       department: user.department,
     });
 
-    // Month names for display
     const months = [
-      "january", "february", "march", "april", "may", "june",
-      "july", "august", "september", "october", "november", "december"
+      "january","february","march","april","may","june",
+      "july","august","september","october","november","december"
     ];
 
-    // 1) Logged-in student stats (monthly present/absent)
+    // 1) Logged-in student stats
     const myStats = months.map(m => ({ name: m, present: 0, absent: 0 }));
 
     response.forEach((record) => {
@@ -207,7 +168,6 @@ export const attendance = async (req, res) => {
       });
     });
 
-   
     // 2) All students yearly percentage
     const allStudentsStats = [];
 
@@ -231,22 +191,82 @@ export const attendance = async (req, res) => {
       const percentage = total > 0 ? (present / total) * 100 : 0;
 
       allStudentsStats.push({
-        studentId: student._id,
-        studentName: student.name, 
+        rollNo: student.rollNo,
+        studentName: student.studentName,
+        image: student.image.url,        // make sure schema has image field
         percentage: percentage.toFixed(2),
       });
     }
 
-  
+    // 3) Highest 3 students
+    const top3 = [...allStudentsStats]
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 3)
+      .map(s => ({
+        studentName: s.studentName,
+        image: s.image,
+        percentage: s.percentage,
+      })); 
+
     // Final response
     return res.status(200).json({
-      message: "ok",
-      myStats,          //logged-in student monthly stats
-      allStudentsStats, //each student yearly percentage
+      message: "Data processed successfully",
+      myStats,          // logged-in student monthly stats 
+      allStudentsStats, // yearly percentage of each student
+      top3Students: top3, // highest 3 students with name + image
     });
 
   } catch (error) {
     console.log("ERROR !! in student attendance", error);
     res.status(500).json({ error: "internal server error" });
   }
+};
+
+//student result
+export const result= async(req,res)=>{
+    const studentId=req.studentId;
+      try {
+        const allresults=await resultSchema.find();   
+        const student=await studentSchema.findById(studentId);
+
+        if(!student){
+          console.log('ERROR !! in student result controller student not found');
+          return res.status(404).json({error:'student not found'});
+        }
+      const stdresult=allresults.filter((e)=> e.department===student.department && e.year===student.year);
+        if(!stdresult || stdresult.length===0 || stdresult===null){
+          console.log('ERROR !! in student result controller no result found');
+          return res.status(404).json({error:'No result published'});
+        }
+
+        console.log('result fetch successfully',stdresult); 
+        return res.status(200).json({message:'result fetch successfully',stdresult});
+      } catch (error) {
+        console.log("ERROR !! in student result controller:",error);
+        return res.status(500).json({error:'internal server error'});
+      }
+};
+
+//student account 
+export const account=async (req,res)=>{
+   const studentId=req.studentId;
+   try {
+    //get login student data
+    const student=await studentSchema.findById(studentId);
+    if(!student || student===null){
+      console.log('ERROR !! in student controller student not found');
+      return res.status(404).json({error:'student not found'});
+    }
+    //get payment data
+    const paymentData=await paymentSchema.find({stdId:studentId});
+    if(!paymentData){
+      console.log('No payment initiate');
+      return res.status(404).json({message:'No payment initiate'})
+    }
+       console.log('payment data fetch successfully',paymentData);
+    return res.status(200).json({message:'payment data fetch successfully',paymentData})
+   } catch (error) {
+    console.log('ERROR !! in student account controller');
+    return res.status(500).json({error:'internal server error'});
+   }
 };

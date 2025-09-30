@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import config from "../../config.js";
 import { v2 as cloudinary } from "cloudinary";
 import { AttendanceSchema } from "../models/takeAttendance.model.js";
+import { resultSchema } from "../models/addResult.model.js";
+import { paymentSchema } from "../models/payment.model.js";
 
 //admin login
 export const adminLogin = async (req, res) => {
@@ -167,7 +169,7 @@ export const addStudent = async (req, res) => {
 
 //adminview all students
 export const adminViewAllStudents = async (req, res) => {
-//  const { department, year } = req.body;
+  //  const { department, year } = req.body;
 
   try {
     // if (!department || !year) {
@@ -189,19 +191,19 @@ export const adminViewAllStudents = async (req, res) => {
     // console.log("Students retrieved successfully ✅", students);
     // res.status(200).json({ students });
 
-    const data=await StudentSchema.find()
-    
-    if(!data){
-        console.log("No data found");
-        res.status(404).json("student data not found")
-    }else{
-        console.log('data fetch succesfully');
-        res.status(200).json(data);
-    }   
-   } catch (error) {
-     console.log("❌ERROR !! in adminViewAllStudents controller:", error);
-     res.status(500).json({ error: "internal server error" });
-   }
+    const data = await StudentSchema.find();
+
+    if (!data) {
+      console.log("No data found");
+      res.status(404).json("student data not found");
+    } else {
+      console.log("data fetch succesfully");
+      res.status(200).json(data);
+    }
+  } catch (error) {
+    console.log("❌ERROR !! in adminViewAllStudents controller:", error);
+    res.status(500).json({ error: "internal server error" });
+  }
 };
 
 //admin update student
@@ -344,7 +346,7 @@ export const takeAttendance = async (req, res) => {
     const isExist = await AttendanceSchema.findOne({ department, year, date });
     if (isExist) {
       return res
-        .status(404)
+        .status(409)
         .json({ error: "Attendance already marked for this date" });
     }
     const newAttendance = new AttendanceSchema({
@@ -362,3 +364,162 @@ export const takeAttendance = async (req, res) => {
     res.status(500).json({ error: "internal server error" });
   }
 };
+
+//admin addResult
+export const addResult = async (req, res) => {
+  const { department, year, examName, examDate, totalMark, stdResult } =
+    req.body;
+
+  try {
+    console.log(department, year, examName, examDate, totalMark, stdResult);
+
+    if (
+      !department ||
+      !year ||
+      !examName ||
+      !examDate ||
+      !totalMark ||
+      !stdResult ||
+      stdResult.length === 0
+    ) {
+      console.log("ERROR !! in addResult controller required data not found");
+      return res.status(404).json({ error: "pleas provid eall data" });
+    }
+
+    //  const isExist=await resultSchema.findOne({examName,examDate});
+    //            if(isExist){
+    //             console.log('ERROR !! Exam have same name and date aleardy exist');
+    //             return res.status(409).json({error:'Exam have same name and date aleardy exist'});
+    //            }
+    const newResult = new resultSchema({
+      department,
+      year,
+      examName,
+      examDate,
+      totalMark,
+      stdResult,
+    });
+
+    await newResult.save();
+    console.log("Result added successfully", newResult);
+    return res.status(200).json({ message: "Result added successfully" });
+  } catch (error) {
+    console.log("ERROR !! in addResult controller:", error);
+    return res.status(500).json({ error: "internal server error" });
+  }
+};
+
+//admin View results
+export const adminViewResult = async (req, res) => {
+  const { department, year } = req.body;
+  try {
+    if (!department || !year) {
+      console.log("ERROR !! in admin view result pleas provied all data");
+      return res.status(404).json({ error: "pleas provide all data" });
+    }
+
+    const results = await resultSchema.find({ department, year });
+    console.log(results);
+
+    return res.status(200).json({ results });
+  } catch (error) {
+    console.log("ERROR !! in admin view Result controller", error);
+    return res.status(500).json({ error: "internal server error" });
+  }
+};
+
+//pay fees
+export const payFees = async (req, res) => {
+  const { payMode, payAmount,paymentId, dateOfPay } = req.body;
+  const { stdId } = req.params;
+  try {
+    //check user exist or not in studentList
+   // console.log("stdId=", stdId);
+    const isExist = await StudentSchema.findById(stdId);
+    console.log("isExist=", isExist.studentName,'  ',isExist.rollNo);
+    
+    if (!isExist) {
+      console.log("ERROR !! in payFee controller user not exist");
+      return res
+        .status(404)
+        .json({ error: "user not found pleas check carefully" });
+    }
+const department=isExist.department;
+
+    if ( !payMode || !payAmount || !paymentId ||!dateOfPay) {
+      console.log("ERROR !! in payFee controller required data not found");
+      return res.status(409).json({ error: "please fillup all field" });
+    }
+
+    //set total amount according to respective departgment
+    let totalAmount;
+    if (["BBA", "BBT", "BCA", "plus3"].includes(department)) {
+      totalAmount = 150000;
+    } else if (["MBA", "MCA"].includes(department)) {
+      totalAmount = 120000;
+    } else if (["plus2", "diploma"].includes(department)) {
+      totalAmount = 110000;
+    } else if (department === "b_tech") {
+      totalAmount = 160000;
+    } else {
+      return res.status(400).json({ error: "Invalid department" });
+    }
+
+    // payment history object
+    const paymentEntry = {
+      amount: payAmount,
+      payMode,
+      paymentId,
+      date: new Date(dateOfPay),
+    };
+        //console.log(paymentEntry);
+
+    const existingpayment = await paymentSchema.findOne({ stdId });
+    let updatePayment;
+    if (!existingpayment || existingpayment===null) {
+      //create a new std account record
+      updatePayment = await paymentSchema.create({
+        stdId,
+        studentName:isExist.studentName,
+        department,
+        year:isExist.year,
+         totalAmount,
+        totalDipositAmount: payAmount,
+        remainAmount: totalAmount - payAmount,
+        history: [paymentEntry],
+      });
+    } else {
+      //update existing payment
+      updatePayment = await paymentSchema.findOneAndUpdate(
+        { stdId },
+        {
+          $inc: {
+            totalDipositAmount: payAmount,
+            remainAmount: -payAmount,
+          },
+          $push: { history: paymentEntry },
+        },
+        { new: true }
+      );
+    }
+
+    return res.status(200).json({
+      message: "Payment successfully",
+      data: updatePayment,
+    });
+  } catch (error) {
+    console.log("ERROR !! in payFees controller", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//view payments
+export const viewpayment=async(req,res)=>{
+  try {
+    const payments=await paymentSchema.find();
+    return res.status(200).json({message:'payment fetched successfully'},payments);
+  } catch (error) {
+    console.log('ERROR !! in view payment controller:',error);
+    return res.status(500).json({error:'internal server error'});
+  }
+}

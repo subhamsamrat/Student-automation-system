@@ -1,9 +1,10 @@
- import React from 'react'
- 
- function Profile() {
-const localUser=JSON.parse(localStorage.getItem("user"));
+ import React, { useContext } from 'react'
+ import { authContext } from '../context/AuthContext.jsx'
 
-  const date =new Date(localUser.DOB);
+ function Profile() {
+  
+const user=useContext(authContext);
+  const date =new Date(user.DOB);
   
    return (
     <>
@@ -15,29 +16,29 @@ const localUser=JSON.parse(localStorage.getItem("user"));
        <div className="menu bg-base-200 text-base-content min-h-full w-[30vw] p-3 ">
       {/* Sidebar content here */}
       <div className='flex items-center gap-5 bg-gradient-to-t to-blue-700 p-3 rounded-lg shadow-xl'>
-        <img src={localUser.image.url} alt="" className='h-35 w-35  rounded-full object-cover shadow-2xl'/>
-        <h2 className="text-2xl font-bold">{localUser.studentName} </h2>
+        <img src={user.image.url} alt="" className='h-35 w-35  rounded-full object-cover shadow-2xl'/>
+        <h2 className="text-2xl font-bold">{user.studentName} </h2>
       </div>
       <section className=''>
         <h3 className='mt-3 text-xl text-blue-600 underline'>Academic Details</h3>
         <div className='mt-0.5 '>
-          <p className='hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Department :-</span>{localUser.department}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Year :-</span>{localUser.year}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Roll No :-</span>{localUser.rollNo}</p>
+          <p className='hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Department :-</span>{user.department}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Year :-</span>{user.year}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold '>Roll No :-</span>{user.rollNo}</p>
           
         </div>
       </section>
       <section>
         <h3 className='mt-3 text-xl text-blue-600 underline'>Personal Details</h3>
         <div className='mt-0.5'>
-          <p className='hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Email :-</span>{localUser.email}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span  className='font-semibold'>Father Name :-</span>{localUser.parentName}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Phone :-</span>{localUser.phoneNo}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Parent Phone :-</span>{localUser.parentPhoneNo}</p>
+          <p className='hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Email :-</span>{user.email}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span  className='font-semibold'>Father Name :-</span>{user.parentName}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Phone :-</span>{user.phoneNo}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Parent Phone :-</span>{user.parentPhoneNo}</p>
           <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Date of Birth :-</span>{date.toLocaleDateString()}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Gender :-</span>{localUser.gender}</p>
-           <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>state :-</span>{localUser.state}</p>
-          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>city :-</span>{localUser.city}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>Gender :-</span>{user.gender}</p>
+           <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>state :-</span>{user.state}</p>
+          <p className='mt-2 hover:bg-gray-200 py-0.5 px-1'><span className='font-semibold'>city :-</span>{user.city}</p>
         </div>
       </section>
       <button 
@@ -55,37 +56,4 @@ const localUser=JSON.parse(localStorage.getItem("user"));
    )
  }
  
- export default Profile
- 
-
-//  {
-//   <div className="menu bg-base-200 text-base-content min-h-full w-[30vw] p-3 ">
-//       {/* Sidebar content here */}
-//       <div className='flex items-center gap-5 bg-gradient-to-t to-blue-700 p-3 rounded-lg shadow-xl'>
-//         <img src="https://t3.ftcdn.net/jpg/13/65/98/42/240_F_1365984265_rRMWjvrYwOTK1pIpsQdbXQhykUJgqQqR.jpg" alt="" className='h-35 w-35  rounded-full object-cover shadow-2xl'/>
-//         <h2 className="text-2xl font-bold">Subham </h2>
-//       </div>
-//       <section className=''>
-//         <h3 className='mt-3 text-xl text-blue-600 underline'>Academic Details</h3>
-//         <div className='mt-1 '>
-//           <p className='hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Department :-</span> Bca</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold '>Reg No :-</span> 123456</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Roll No :-</span> 23</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Address :-</span> 123 Main St, City, Country</p>
-//         </div>
-//       </section>
-//       <section>
-//         <h3 className='mt-3 text-xl text-blue-600 underline'>Personal Details</h3>
-//         <div className='mt-1'>
-//           <p className='hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Email :-</span> subham@example.com</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span  className='font-semibold'>Father Name :-</span> Mr. Subham</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Phone :-</span> +1234567890</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Parent Phone :-</span> +1234567890</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Date of Birth :-</span> 01/01/2000</p>
-//           <p className='mt-2 hover:bg-gray-200 py-1 px-1'><span className='font-semibold'>Gender :-</span> Male</p>
-
-//         </div>
-//       </section>
-//       <button className='mt-5 btn bg-black text-white'>Logout</button>
-//     </div>
-//  }
+ export default Profile;

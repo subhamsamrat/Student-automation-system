@@ -50,12 +50,6 @@ app.use(cors(corsOptions));
 app.use('/api/v1/admin',admin);
 app.use('/api/v1/student',student);
 
-// connectDB();console.log('db hit ');
-
-// app.listen(PORT,()=>{ 
-//     console.log('Server running on port',PORT);
-// } )
-
 const startServer = async () => {
   try {
     await connectDB();  // waits until DB is connected

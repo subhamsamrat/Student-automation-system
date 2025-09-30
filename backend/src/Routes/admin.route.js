@@ -5,7 +5,10 @@ import {
   adminViewAllStudents,
   deleteStudent,
   takeAttendance,
-  UpdateStudent,
+  UpdateStudent,addResult,
+  adminViewResult,
+  payFees,
+  viewpayment
 } from "../controller/admin.controller.js";
 import adminMiddleware from "../middleware/admin.mid.js";
 
@@ -17,5 +20,9 @@ router.get("/viewstudents", adminViewAllStudents);
 router.put("/updatestudent/:studentId", adminMiddleware, UpdateStudent);
 router.delete("/deletestudent/:studentId", adminMiddleware, deleteStudent);
 router.post("/takeattendance",adminMiddleware, takeAttendance);
+router.post("/addResult",addResult);
+router.get("/viewresults",adminViewResult);
+router.post("/payment/:stdId",payFees);
+router.get("/viewpayment",viewpayment);
 
 export default router;
