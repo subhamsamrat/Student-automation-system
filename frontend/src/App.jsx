@@ -9,18 +9,19 @@ import Account from './components/account/Account'
 import TakeAttendance from './components/attendance/TakeAttendance'
 import { authContext } from './context/AuthContext'
 import Attendance from './components/attendance/Attendance.jsx'
+import AddResult from './components/Restlt/AddResult'
 
 //+++++++++++++++++++++++++admin++++++++++++++++++++++++++
 
 //import Navbar from './components/Navbar'
-import Addstudent from './components/student/Addstudent';
-import Viewstudent from './components/student/Viewstudent';
-import Admin_Studentlist from './components/student/Admin_Studentlist';
- import Editstudent from './components/student/Editstudent';
+// import Addstudent from './components/student/Addstudent';
+// import Viewstudent from './components/student/Viewstudent';
+// import Admin_Studentlist from './components/student/Admin_Studentlist';
+//  import Editstudent from './components/student/Editstudent';
 // import Payfees from './components/studentfees/Payfees';
 // import Feeshistory from './components/studentfees/Feeshistory';
-import Admin_AttendanceReport from './components/attendance/Admin_attendanceReport';
-import Admin_Attendance from './components/attendance/Admin_attendance';
+// import Admin_AttendanceReport from './components/attendance/Admin_attendanceReport';
+// import Admin_Attendance from './components/attendance/Admin_attendance';
 // import Addresult from './components/result/Addresult';
 // import Viewresult from './components/result/Viewresult';
 
@@ -50,6 +51,7 @@ const user=useContext(authContext);
         <Route path='/result' element={ user?<Result/>:<Navigate to='/signup'/>}/>
         <Route path='/account' element={<Account/>}/>
         <Route path='/take' element={<TakeAttendance/>}/> 
+        <Route path='/addresult' element={<AddResult/>}/> 
 
         {/* ++++++++++++++admin++++++++++++++++++ */}
 

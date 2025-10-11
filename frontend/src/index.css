@@ -5,6 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 @plugin "daisyui"; 
 
+
+
 body{
 
   font-family: 'poppins',sans-serif;
@@ -309,3 +311,59 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 } */
+
+
+.card {
+  width: 500px;
+  height: 280px;
+  perspective: 1000px;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.999s;
+}
+
+.card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  display: flex;
+  align-items: center;
+   border: 2px solid #6A2C70; 
+  border-radius: 10px;
+  justify-content: center;
+  font-size: 24px;
+  transform: rotateY(0deg);
+}
+.card-front div{
+  width: 100%;
+  height: 100%;
+  /* background-image: url("https://img.freepik.com/free-vector/gradient-abstract-geometric-background_23-2149436181.jpg?w=2000"); */
+  background-size: cover;
+  border-radius: 10px;
+ 
+}
+
+.card-back {
+  background-color: #F08A5D;
+  display: flex;
+  align-items: center;
+  border: 10px solid #F08A5D;
+  border-radius: 10px;
+  justify-content: center;
+  font-size: 24px;
+  transform: rotateY(180deg);
+}

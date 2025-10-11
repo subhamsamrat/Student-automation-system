@@ -4,12 +4,13 @@ import config from '../../config.js';
 export default function studentMiddleware(req,res,next){
  //const authHeader=req.headers.authorization;
  try {
-   const token=req.cookies.jwt;
-
+   const token=req.cookies.jwt;  
+    console.log('tokemnm=',req.cookies.jwt);
+    
    if(!token){
         console.log('No token provided');
         return res.status(401).json({error:'No token provided'});
-   }
+   } 
 
    //  if(!authHeader || !authHeader.startsWith('Bearer')){
    //      console.log('No token provided unauthorize');

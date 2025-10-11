@@ -14,7 +14,7 @@
     "ext": "js,json",
     "exec": "node index.js",
     "delay": "500",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

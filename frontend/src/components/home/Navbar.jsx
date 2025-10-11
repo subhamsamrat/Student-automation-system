@@ -88,7 +88,7 @@ function Navbar() {
               </ul>
             </div>
             <a className="md:ml-10 text-2xl font-bold">
-              Auto<span className="text-blue-600">ED</span>
+              S<span className="text-blue-600">A</span>S
             </a>
           </div>
           <div className="navbar-center hidden lg:flex">

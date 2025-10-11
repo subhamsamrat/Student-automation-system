@@ -10,6 +10,21 @@ function Account() {
    RecieptID:'124332',
    status:'Success'
   },
+   {
+ date:"2025.08.12",
+   Amount:'12345',
+   Mode: "upi",
+   RecieptID:'124332',
+   status:'Success'
+  },
+   {
+ date:"2025.08.12",
+   Amount:'12345',
+   Mode: "upi",
+   RecieptID:'124332',
+   status:'Success'
+  },
+  
   
 ];
   return (
@@ -33,6 +48,7 @@ function Account() {
                   <th>Mode</th>
                   <th>Reciept ID</th>
                   <th>Status</th>
+                  <th>recept</th> 
                </tr>
              </thead>
              <tbody className=''>
@@ -44,6 +60,8 @@ function Account() {
                  <td>{item.Mode}</td>
                   <td>{item.RecieptID}</td> 
                   <td>{item.status}</td> 
+                  <td className='text-[11px] underline text-green-500'><a href="">download</a></td> 
+
                </tr>
                 ))
                }

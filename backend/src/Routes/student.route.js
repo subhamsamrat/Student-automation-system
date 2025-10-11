@@ -10,5 +10,5 @@ router.post('/studentlogin',studentLogin);
 router.get('/attendance',studentMiddleware,attendance);
 router.get('/results',studentMiddleware,result);
 router.get('/account',studentMiddleware,account);
-
+ 
 export default router;

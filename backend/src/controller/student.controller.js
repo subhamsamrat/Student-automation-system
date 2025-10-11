@@ -239,7 +239,15 @@ export const result= async(req,res)=>{
           return res.status(404).json({error:'No result published'});
         }
 
-        console.log('result fetch successfully',stdresult); 
+         const latestResult = allresults.reduce((latest, current) => {
+  return new Date(current.examDate) > new Date(latest.examDate) ? current : latest;
+});
+
+    const top10Std=latestResult.stdResult.sort((a,b)=>b.mark-a.mark)
+      console.log(top10Std.slice(0,9));
+      
+               
+
         return res.status(200).json({message:'result fetch successfully',stdresult});
       } catch (error) {
         console.log("ERROR !! in student result controller:",error);

@@ -16,6 +16,7 @@ import {
   PieChart,
 } from "recharts";
 import { authContext } from "../../context/AuthContext.jsx";
+import '../../index.css';
 
 function Attendance() {
   const user = useContext(authContext);
@@ -106,15 +107,15 @@ function Attendance() {
             <>
               <div>
                 <div className="h-20 md:w-120 w-105 mx- rounded-md flex bg-gradient-to-tr from-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
-                  <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+                  <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)] bg-cover overflow-hidden">
                     <img src={top3Std[0].image} alt="" />
                   </div>
-                  <div className="w-1/1 font-bold text-2xl pt-6 pl-2">
+                  <div className="w-1/1 font-bold text-2xl pt-6 pl-2 ">
                     {top3Std[0].studentName}
                   </div>
                   <div className="w-1/5 mt-2 mr-2 ">
                     <img
-                      className="h-full w-full bg-cover"
+                      className="h-full w-full "
                       src="https://cdn-icons-png.flaticon.com/128/11167/11167970.png"
                       alt="1st"
                     />
@@ -122,7 +123,7 @@ function Attendance() {
                 </div>
 
                 <div className="h-20 md:w-120 w-110 mt-5 rounded-md flex bg-gradient-to-r from-purple-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
-                  <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+                  <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)] bg-cover overflow-hidden">
                     <img src={top3Std[1].image} alt="" />
                   </div>
                   <div className="w-1/1 font-bold text-2xl pt-6 pl-2">
@@ -137,7 +138,7 @@ function Attendance() {
                 </div>
 
                 <div className="h-20 md:w-120 w-105 mt-5 px- rounded-md flex bg-gradient-to-tr from-green-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
-                  <div className="w-1/5 rounded-full  m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+                  <div className="w-1/5 rounded-full  m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)] bg-cover overflow-hidden">
                     <img src={top3Std[2].image} alt="" />
                   </div>
                   <div className="w-1/1 font-bold text-2xl pt-6 pl-2">
@@ -159,7 +160,49 @@ function Attendance() {
           <h1 className="bg-gradient-to-l md:from-blue-500 to-blue-500 md:to-white text-2xl mt-8 h-10 w-full text-center font-bold underline">
             Your card
           </h1>
-          <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5 border border-base-content/30">
+          {/* <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5 border border-base-content/30 hover:rotate-y-180 duration-300">
+            <figure>
+              <img
+                className="h-full w-70 rounded-l-lg object-cover"
+                src={user.image.url}
+                alt="image"
+              />
+            </figure>
+            <div className="card-body rounded-r-lg ">
+              <h2 className="card-title text-2xl">{user.studentName}</h2>
+              <p>Roll No= {user.rollNo}</p>
+              <p>
+                Department= {user.department} {user.year}
+              </p>
+              <p className="text-[14px] font-bold">
+                Your attendance= {myPercent}%
+              </p>
+              {myPercent >= 90 && myPercent < 100 ? (
+                <p className="text-green-500">Excellent Attendee 🥇</p>
+              ) : myPercent >= 75 && myPercent < 90 ? (
+                <p className="text-blue-600">Good Attendee 🥈</p>
+              ) : (
+                <p className="text-red-600">⚠️ "Needs Improvement"</p>
+              )}
+              {myPercent >= 90 && myPercent < 100 ? (
+                <div className="border-green-500 border p-2 text-[11px] text-green-600 bg-green-300/50 rounded-md">
+                  🥇 Excellent! You have a great attendance record.
+                </div>
+              ) : myPercent >= 75 && myPercent < 90 ? (
+                <div className="border-blue-500 border p-2 text-[11px] text-blue-600 bg-blue-300/50 rounded-md">
+                  🥈 Good! You are maintaining required attendance.
+                </div>
+              ) : (
+                <div className="border-red-500 border p-2 text-[11px] text-red-600 bg-red-300/50 rounded-md">
+                  ⚠️ Your attendance is below 75%. You may not be eligible for
+                  exams.
+                </div>
+              )}
+            </div>
+          </div> */}
+         
+
+      <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5 ">
             <figure>
               <img
                 className="h-full w-70 rounded-l-lg object-cover"
@@ -199,6 +242,8 @@ function Attendance() {
               )}
             </div>
           </div>
+
+
         </div>
       </div>
 
