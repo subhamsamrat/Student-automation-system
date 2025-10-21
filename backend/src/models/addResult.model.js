@@ -13,11 +13,11 @@ const addResultSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-     examDate:{
+     ExamDate:{
         type:Date,
         required:true
     },
-     totalMark:{
+     fullMark:{
         type:Number,
         required:true
     },
@@ -27,7 +27,7 @@ const addResultSchema=new mongoose.Schema({
             type:String,
             required:true
            },
-           securedMark:{
+           mark:{
             type:Number,
             required:true
            } 

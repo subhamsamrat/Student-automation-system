@@ -367,23 +367,20 @@ export const takeAttendance = async (req, res) => {
 
 //admin addResult
 export const addResult = async (req, res) => {
-  const { department, year, examName, examDate, totalMark, stdResult } =
-    req.body;
-
+  const { department, year, examName, ExamDate, fullMark, stdResult } =req.body;
   try {
-    console.log(department, year, examName, examDate, totalMark, stdResult);
-
+    console.log(department, year, examName, ExamDate, fullMark, stdResult);
     if (
       !department ||
       !year ||
       !examName ||
-      !examDate ||
-      !totalMark ||
+      !ExamDate ||
+      !fullMark ||
       !stdResult ||
       stdResult.length === 0
     ) {
       console.log("ERROR !! in addResult controller required data not found");
-      return res.status(404).json({ error: "pleas provid eall data" });
+      return res.status(404).json({ error: "pleas provid all data" });
     }
 
     //  const isExist=await resultSchema.findOne({examName,examDate});
@@ -395,8 +392,8 @@ export const addResult = async (req, res) => {
       department,
       year,
       examName,
-      examDate,
-      totalMark,
+      ExamDate,
+      fullMark,
       stdResult,
     });
 

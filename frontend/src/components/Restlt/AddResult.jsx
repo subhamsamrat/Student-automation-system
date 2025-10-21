@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../home/Navbar";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+ import toast from 'react-hot-toast';
 
 const AddResult = () => {
   const [department, setDepartment] = useState("");
@@ -61,29 +63,76 @@ const AddResult = () => {
     return updated;
   });
 };
-
  
   //post attendancev reports
   const handleSubmit = async () => {
     try {
-      // if(submitResult.ExamDate==="" || submitResult.examName==="" || submitResult.fullMark=== "" || submitResult.department==="" || submitResult.year==="" || submitResult.stdResult.length===0){
-      //    alert('pleas provide all data');
-      // }
-     submitResult.department===""?alert('pleas select department'):submitResult.year===""?alert('pleas select year'):submitResult.examName===''?alert('pleas Enter Exam Name'):submitResult.fullMark===""?alert('pleas enter fullMark') :submitResult.ExamDate===""?alert('pleas enter examDate'):submitResult.
-     console.log(submitResult);
+
+      if(submitResult.department===''){
+        toast.error('Please select department');
+        return;
+      }
+      if(submitResult.year===''){
+        toast.error('Please select year');
+        return;
+      }
+      if(submitResult.examName===''){
+        toast.error('Please enter exam name');
+        return;
+      }
+      if(submitResult.fullMark===''){
+        toast.error('Please enter full mark');
+        return;
+      }
+      if(submitResult.ExamDate===''){
+        toast.error('Please select exam date');
+        return;
+      }
+      if(submitResult.stdResult.length===0 || submitResult.stdResult.some((e)=>e.mark==='')){
+        toast.error('Please enter students Results');
+        return;
+      }  console.log('length od std result=',submitResult.stdResult);
+      
+        if(submitResult.stdResult.some((e)=>e.mark>submitResult.fullMark ||e.mark<0)){
+      toast.error('Please Enter a Valid Marks');
+      return;
+      }
+      if(submitResult.stdResult.length!==fetchstd.length){
+        toast.error('Please enter all students Results');
+        return;
+      }
+          console.log('succesfull=',submitResult);
+
+      toast.promise(axios.post("http://localhost:4000/api/v1/admin/addresult", submitResult),
+      {
+        loading: 'Publishing...',
+        success: <b>Published successfully!</b>
+        // error: <b>Could not publish!</b>
+      });
+        setDepartment('');
+        setyear('');
+        setExamName('');
+        setFullMark('');
+        setExamDate('');
+        setfetchstd([]);
+        setStdResult([]);
+        setTimeout(()=>{   window.location.reload();},1500)
+     
     } catch (error) {
       console.log("Error in publishing results", error);
-      alert(error.response.data.error || "Error in publishing results");
+      handleAxiosError(error);
     }
   };
+
+  
 
   return (
     <>
       <div className="h-full w-screen">
         <Navbar />
         <div className="h-10 mt-2">
-          <h1 className=" bg-gradient-to-r from-yellow-500 to-rose-600 bg-clip-text text-transparent text-3xl flex justify-center font-bold ">
-            Publish Result
+          <h1 className=" bg-gradient-to-r from-yellow-500 to-rose-600 bg-clip-text text-transparent text-3xl flex justify-center font-bold">
+              Publish Results
           </h1>
         </div>
         <div className="flex items-center h-full mt-10">
@@ -100,7 +149,7 @@ const AddResult = () => {
                 Select department
               </option>
               <option value="BCA">BCA</option>
-              <option value="BBT">BBT</option>
+              <option value="BBT">BBT</option> 
               <option value="BBA">BBA</option>
               <option value="MCA">MCA</option>
             </select>
@@ -121,6 +170,14 @@ const AddResult = () => {
               <option value="2nd yr">2nd yr</option>
               <option value="3rd yr">3rd yr</option>
             </select>
+          </div>
+          <div className=" w-40 ml-240 h-10 rounded-md">
+            <a href="/viewresult">
+               <button className="btn h-full w-full bg-gradient-to-r from-red-400 to-blue-500 text- font-bold hover:scale-105 transition-all">
+                      View Results
+                    </button>
+            </a>
+                   
           </div>
         </div>
 

@@ -10,6 +10,7 @@ import TakeAttendance from './components/attendance/TakeAttendance'
 import { authContext } from './context/AuthContext'
 import Attendance from './components/attendance/Attendance.jsx'
 import AddResult from './components/Restlt/AddResult'
+import ViewResult from './components/Restlt/ViewResult'
 
 //+++++++++++++++++++++++++admin++++++++++++++++++++++++++
 
@@ -52,6 +53,7 @@ const user=useContext(authContext);
         <Route path='/account' element={<Account/>}/>
         <Route path='/take' element={<TakeAttendance/>}/> 
         <Route path='/addresult' element={<AddResult/>}/> 
+        <Route path='/viewresult' element={<ViewResult/>}/> 
 
         {/* ++++++++++++++admin++++++++++++++++++ */}
 
