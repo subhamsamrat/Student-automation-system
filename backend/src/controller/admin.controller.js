@@ -408,7 +408,8 @@ export const addResult = async (req, res) => {
 
 //admin View results
 export const adminViewResult = async (req, res) => {
-  const { department, year } = req.body;
+  const { department, year } = req.query; 
+
   try {
     if (!department || !year) {
       console.log("ERROR !! in admin view result pleas provied all data");
@@ -416,6 +417,10 @@ export const adminViewResult = async (req, res) => {
     }
 
     const results = await resultSchema.find({ department, year });
+    if(!results && results.length===0){
+      console.log('No Result Found !!');
+      return res.status(404).json({error: 'NO result Found !!'});
+    }
     console.log(results);
 
     return res.status(200).json({ results });

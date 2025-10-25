@@ -6,19 +6,24 @@ import axios from 'axios';
 function ViewResult() {
   const[department,setDepartment]=useState('');
   const [year,setYear]=useState('');
+  const [result,SetResult]=useState([]);
   const[loading,setLoading]=useState(false); 
   const res=true;
   console.log('department=',department,'  ','year=',year);
-  
+  console.log('response=',result); 
   const fetchData=async()=>{
-    const response=await axios.get('http://localhost:4000/api/v1/admin/viewresults',department,year);
-    console.log(response);
-    
+    const response=await axios.get('http://localhost:4000/api/v1/admin/viewresults',{params:{department:department,year:year}});
+    const results=response.data.results;
+    SetResult(results);
+    setLoading(false);
   }
 
   useEffect(()=>{
+   if(department && year){
     fetchData();
-  },[]);
+    setLoading(true);
+   }
+  },[department,year]);
 
   return (
    <>
@@ -46,37 +51,44 @@ function ViewResult() {
      {
      department ==='+2-Science' || department ==='MBA' || department==='MCA' ?
       ( <>
-       <option>1st year</option>
-       <option>2nd year</option>
+       <option value='1st yr'>1st year</option>
+       <option value='2nd yr'>2nd year</option>
        </>)
        :department=== 'BCA' || department==='BBA' || department==='BBT' || department==='+3-Science'?
       ( <>
-       <option>1st year</option>
-        <option>2nd year</option>
-       <option>3rd year</option>
+       <option value='1st yr'>1st year</option>
+        <option value='2nd yr'>2nd year</option>
+       <option value='3rd yr'>3rd year</option>
        </>)
        :department==='B-Tech'?
        (<>
-        <option>1st year</option>
-        <option>2nd year</option>
-        <option>3rd year</option>
-        <option>4th year</option>
+        <option value='1st yr'>1st year</option>
+        <option value='2nd yr'>2nd year</option>
+        <option value='3rd yr'>3rd year</option>
+        <option value='4th yr'>4th year</option>
        </>):''
      }
 </select>
           </div>
           <h1 className='h-10 mt-3 text-2xl text-white font-bold underline text-center bg-gradient-to-bl to-blue-900 from-blue-500'>Exam List</h1>
 
-          <div className='h-115 overflow-y-auto mx-20 mt-3'>
+          <div className='h-115 overflow-y-auto mx-20 mt-3 '>
               {loading?(<Loading1/>):
               (
-                  res?(
-                       <div className='h-15 rounded-xl shadow-xl  bg-lime-400/60 shadow-[10px_4px_10px_rgba(0,0,0,0.3) flex items-center justify-around'>
-                          <div><p>1</p></div>
-                          <div><p>Annual Exam 1</p></div>
-                          <div><p> 20-09-2025</p></div>
+                  result.length>0?(
+                       result.map((e,idx)=>{
+                       const date=new Date(e.ExamDate)
+                     
+                       
+                        return(
+                          <div className='h-15 rounded-xl shadow-xl  bg-lime-400/60 shadow-[10px_4px_10px_rgba(0,0,0,0.3) flex items-center justify-around mt-3' key={idx}>
+                          <div><p>{idx + 1}</p></div>
+                          <div><p>{e.examName}</p></div>
+                          <div><p>{date.toLocaleDateString()}</p></div>
                           <div><a href="" className='text-blue-500 underline text-sm'>View Result</a></div>
                        </div>
+                        )
+                       })
                   ):(
                     <div >
                     <h1 className='text-2xl font-bold text-center pt-50'>No Data Found</h1>
