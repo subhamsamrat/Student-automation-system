@@ -1,7 +1,7 @@
 import loginAdmin from "../models/admin_login.model.js";
 import StudentSchema from "../models/student.model.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; 
 import config from "../../config.js";
 import { v2 as cloudinary } from "cloudinary";
 import { AttendanceSchema } from "../models/takeAttendance.model.js";
@@ -169,37 +169,37 @@ export const addStudent = async (req, res) => {
 
 //adminview all students
 export const adminViewAllStudents = async (req, res) => {
-  //  const { department, year } = req.body;
+  const { department, year } = req.query;
 
   try {
-    // if (!department || !year) {
-    //   console.log(
-    //     "❌ERROR !! in adminViewAllStudents controller: Missing required query parameters"
-    //   );
-    //   return res
-    //     .status(400)
-    //     .json({ error: "department and year are required" });
-    // }
-    // console.log({ department, year });
-
-    // const students = await StudentSchema.find({ department, year });
-    // console.log("Students found:", students);
-    // if (students.length === 0) {
-    //   console.log("❌ERROR !! No students found");
-    //   return res.status(404).json({ error: "No students found" });
-    // }
-    // console.log("Students retrieved successfully ✅", students);
-    // res.status(200).json({ students });
-
-    const data = await StudentSchema.find();
-
-    if (!data) {
-      console.log("No data found");
-      res.status(404).json("student data not found");
-    } else {
-      console.log("data fetch succesfully");
-      res.status(200).json(data);
+    if (!department || !year) {
+      console.log(
+        "❌ERROR !! in adminViewAllStudents controller: Missing required query parameters"
+      );
+      return res
+        .status(400)
+        .json({ error: "department and year are required" });
     }
+    console.log({ department, year });
+
+    const students = await StudentSchema.find({ department, year });
+    console.log("Students found:", students);
+    if (students.length === 0) {
+      console.log("❌ERROR !! No students found");
+      return res.status(404).json({ error: "No students found" });
+    }
+    console.log("Students retrieved successfully ✅", students);
+    res.status(200).json({ students });
+
+    // const data = await StudentSchema.find();
+
+    // if (!data) {
+    //   console.log("No data found");
+    //   res.status(404).json("student data not found");
+    // } else {
+    //   console.log("data fetch succesfully");
+    //   res.status(200).json(data);
+    // }
   } catch (error) {
     console.log("❌ERROR !! in adminViewAllStudents controller:", error);
     res.status(500).json({ error: "internal server error" });

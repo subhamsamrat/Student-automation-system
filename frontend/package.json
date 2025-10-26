@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
+    "@heroui/modal": "^2.2.24",
     "@mui/material": "^7.3.4",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
@@ -39,7 +40,8 @@
     "recharts": "^2.15.4",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.19",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
