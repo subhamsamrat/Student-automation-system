@@ -41,12 +41,12 @@ export const adminLogin = async (req, res) => {
       sameSite: "strict",
     };
 
-    if (compPassword) {
+    if(compPassword) {
       console.log("Login successfully ✅", existAdmin);
       res.cookie("jwt", token, cookieOption);
       return res
         .status(201)
-        .json({ message: "Login Successfully ✅ ", token, existAdmin });
+        .json({ message: "Login Successfully ✅ ", token, existAdmin});
     }
   } catch (error) {
     console.log("❌Error !! in admin login:", error);
@@ -328,14 +328,15 @@ export const deleteStudent = async (req, res) => {
 
 //take attendance
 export const takeAttendance = async (req, res) => {
+   
   const { attendance, department, date, year } = req.body;
-  try {
+  try {  
     if (
       !attendance ||
       !department ||
       !date ||
       !year ||
-      attendance.length === 0
+      attendance.length === 0 
     ) {
       console.log(
         "ERROR !! in takeAttendance controller required data not found"
@@ -344,6 +345,8 @@ export const takeAttendance = async (req, res) => {
     }
 
     const isExist = await AttendanceSchema.findOne({ department, year, date });
+    console.log(isExist);
+    
     if (isExist) {
       return res
         .status(409)
@@ -358,7 +361,7 @@ export const takeAttendance = async (req, res) => {
 
     await newAttendance.save();
     console.log("attendance record save successfully", newAttendance);
-    return res.status(200).json({ message: "attendance save succesfully" });
+    return res.status(200).json({ message: "Attendance Published succesfully" });
   } catch (error) {
     console.log("ERROR !! in takeAttendance conotroller:", error);
     res.status(500).json({ error: "internal server error" });

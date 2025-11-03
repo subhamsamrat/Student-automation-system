@@ -3,6 +3,7 @@ import Navbar from '../home/Navbar';
 import { Loading1 } from '@/utils/Loading.jsx';
 import axios from 'axios';
 import Result_modal from './Result_modal.jsx';
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 function ViewResult() {
   const [department, setDepartment] = useState('');
@@ -11,9 +12,9 @@ function ViewResult() {
   const [loading, setLoading] = useState(false);
   const [selectedResult, setSelectedResult] = useState(null); 
 
+  //fetch students from backend ............
   const fetchData = async () => {
     try {
-      setLoading(true);
       const response = await axios.get('http://localhost:4000/api/v1/admin/viewresults', {
         params: { department, year },
       });
@@ -25,12 +26,14 @@ function ViewResult() {
     }
   };
 
+    //only run when department and year will change
   useEffect(() => {
     if (department && year) {
       fetchData();
     }
   }, [department, year]);
 
+    //open a modal which shows results
   const handleOpenModal = (item) => {
     setSelectedResult(item);
     document.getElementById('result_modal').showModal(); 
@@ -40,6 +43,9 @@ function ViewResult() {
     <>
       <Navbar />
       <div className="bg-lime-500/20 min-h-screen">
+       <div className="text-2xl btn h-9 w-9 p-1.5 absolute top-23 left-4 cursor-pointer rounded-[50%] hover:bg-lime-500 bg-lime-400" onClick={() => window.history.back()}>
+         <IoMdArrowRoundBack />
+        </div>
         <h1 className="text-center pt-3 font-bold text-2xl underline">View Results</h1>
 
         {/* Select fields */}

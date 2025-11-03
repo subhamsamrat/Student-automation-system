@@ -32,6 +32,8 @@ app.use(cookieParser());
 const corsOptions = {
   origin: 'http://localhost:5173', // Your frontend origin
   credentials: true, // Allow credentials (cookies)
+   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 };
 
@@ -52,7 +54,7 @@ app.use('/api/v1/student',student);
 
 const startServer = async () => {
   try {
-    await connectDB();  // waits until DB is connected
+    await connectDB(); 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

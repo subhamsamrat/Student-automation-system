@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { handleAxiosError } from "@/utils/handleAxiosError";
  import toast from 'react-hot-toast';
 
+
 const AddResult = () => {
   const [department, setDepartment] = useState("");
   const [year, setyear] = useState("");
@@ -19,27 +20,28 @@ const AddResult = () => {
   //get student data from backend ...........
   const data = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/viewstudents"
-      );
-      const filterData = response.data.filter(
-        (e) => e.department === department && e.year === year
-      );
-
-      setfetchstd(filterData);
+      const response = await axios.get("http://localhost:4000/api/v1/admin/viewstudents",{params: { department, year }, });
+      setfetchstd(response.data.students);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log("ERROR !! in takeAttendance.jsx:", error);
-      console.log("ERROR !!", error);
+      handleAxiosError(error);
     }
   };
 
+   //run only when department and year will change
   useEffect(() => {
-    data();
-    setLoading(true);
+     if (!department || !year) {
+    setLoading(false); 
+    return;
+  }
+  setLoading(true);
+  setfetchstd([]);
+  data();
   }, [department, year]);
 
-  
+  //data which go to backend 
   const submitResult = {
     department,
     year,
@@ -49,6 +51,7 @@ const AddResult = () => {
    stdResult
   };
 
+  // collect marks and ID of each studnet in an array
   const handelMark = (stdId, mark) => {
   setStdResult((prev) => {
     const updated = [...prev];
@@ -64,7 +67,7 @@ const AddResult = () => {
   });
 };
  
-  //post attendancev reports
+  //post result reports
   const handleSubmit = async () => {
     try {
 
@@ -93,7 +96,9 @@ const AddResult = () => {
         return;
       }  console.log('length od std result=',submitResult.stdResult);
       
-        if(submitResult.stdResult.some((e)=>e.mark>submitResult.fullMark ||e.mark<0)){
+        if(submitResult.stdResult.some((e)=>e.mark>submitResult.fullMark ||e.mark<0 )){
+       
+          
       toast.error('Please Enter a Valid Marks');
       return;
       }
@@ -105,10 +110,18 @@ const AddResult = () => {
 
       toast.promise(axios.post("http://localhost:4000/api/v1/admin/addresult", submitResult),
       {
-        loading: 'Publishing...',
-        success: <b>Published successfully!</b>
-        // error: <b>Could not publish!</b>
-      });
+    loading: "Publishing...",
+    success: (res) => {
+      return <b>{res.data.message || "Published successfully!"}</b>;
+    },
+    error: (err) => {
+      if ( err.response.data.error){    
+        return <b>{err.response.data.error}</b>;
+      } else {
+        return <b>Something went wrong!</b>;
+      }
+    },
+  });
         setDepartment('');
         setyear('');
         setExamName('');

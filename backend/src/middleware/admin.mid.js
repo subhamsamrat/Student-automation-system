@@ -3,14 +3,15 @@ import config from '../../config.js'
 
 export default function adminMiddleware(req,res,next){
 
-    const authHeader=req.headers.authorization;
-    if(!authHeader || !authHeader.startsWith('Bearer')){
-        return res.status(401).json({error:'No token unAuthorize'})
-    }
-    const token=authHeader.split(" ")[1];
-
+  const cookieToken = req.cookies.jwt;
+     console.log(cookieToken);
+     
+  if(!cookieToken){
+    console.log('ERROR !! no token unauthorize');
+    return res.status(401).json({error:'No token unauthorize'});
+  }
     try {
-     const decode=jwt.verify(token,config.JWT_ADMIN_SECRET)
+     const decode=jwt.verify(cookieToken,config.JWT_ADMIN_SECRET);
      req.adminId=decode.id;
      next();    
     } catch (error) {

@@ -1,68 +1,40 @@
 import { LogIn } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Login from "../Login";
 import Profile from "../Profile";
-
+   
 function Navbar() {
-  let navitem, role;
-    const navigate = useNavigate();
+
+
+    
+
+  const navitem = (
+    <>
+      <li>
+        <a href="/" >Home</a>
+      </li>
+      <li>
+        <a href="/attendance">Attendance</a>
+      </li>
+      <li>
+        <a href="/result">Results</a>
+      </li>
+      <li>
+        <a href="/account">Account</a>
+      </li>
+    </>
+  );
   const [sticky, setStikey] = useState(false);
-  const [user, setUser] = useState("");
-  const localUser = JSON.parse(localStorage.getItem("user"));
-
-  const handleAdminLogout=()=>{
-     localStorage.removeItem("user");
-        window.location.reload();
-       navigate("/");
-  }
-if (localUser) {
-    if (localUser.role === "student") {
-    navitem = (
-      <>
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/attendance">Attendance</a>
-        </li>
-        <li>
-          <a href="/result">Results</a>
-        </li>
-        <li>
-          <a href="/account">Account</a>
-        </li>
-      </>
-    );
-    role = localUser.role;
-  } else if (localUser.role==='admin') {
-    navitem = (
-      <>
-        <li>
-          <a href="/">Home</a>
-        </li>
-        <li>
-          <a href="/takeattendance">Attendance</a>
-        </li>
-        <li>
-          <a href="/addresult">Results</a>
-        </li>
-        <li>
-          <a href="/account">Account</a>
-        </li>
-      </>
-    );
-    role = "admin";
-  }
-
-}
+  const [user,setUser]= useState();
   
-
+   const localUser = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
+
     if (localUser) {
-      setUser(role);
-    } else {
-      setUser(role);
+      setUser(true);
+    }else{
+      setUser(false);
     }
   }, []);
 
@@ -127,14 +99,11 @@ if (localUser) {
             <ul className="menu menu-horizontal px-1 ml-200">{navitem}</ul>
           </div>
           <div>
-            {user === "student" ? (
+            {user ? (
               <div>
-                <button
-                  onClick={() =>
-                    document.getElementById("profile_modal").showModal()
-                  }
-                  className="btn btn-ghost btn-circle"
-                >
+                <button 
+                onClick={() => document.getElementById("profile_modal").showModal()}
+                className="btn btn-ghost btn-circle">
                   <div className="indicator">
                     <img
                       src={localUser.image.url}
@@ -142,15 +111,9 @@ if (localUser) {
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   </div>
+                
                 </button>
-                <Profile />
-              </div>
-            ) : user === "admin" ? (
-              <div>
-                <button 
-                 onClick={handleAdminLogout}
-      
-                className="btn bg-red-500 text-white">Logout</button>
+                  <Profile />
               </div>
             ) : (
               <div>
@@ -162,11 +125,12 @@ if (localUser) {
                 >
                   Login
                 </a>
-                <Login />
-              </div>
+                <Login/>
+              </div> 
             )}
             <Login />
           </div>
+
         </div>
       </div>
     </>
@@ -174,3 +138,5 @@ if (localUser) {
 }
 
 export default Navbar;
+
+

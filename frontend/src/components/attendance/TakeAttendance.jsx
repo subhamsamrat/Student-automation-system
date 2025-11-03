@@ -1,108 +1,138 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../home/Navbar";
 import axios from "axios";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+import toast from "react-hot-toast";
 
 const TakeAttendance = () => {
   const [department, setDepartment] = useState("");
   const [year, setyear] = useState("");
   const [date, setDate] = useState("");
   const [fetchstd, setfetchstd] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [attendance, setAttendance] = useState([]);
-  const [totalPresent,setTotalPresent]=useState(0);
-  const [totalAbsent,setTotalAbsent]=useState(0);
-  const [bg,setBg]=useState(false);
+  const [totalPresent, setTotalPresent] = useState(0);
+  const [totalAbsent, setTotalAbsent] = useState(0);
 
   //get student data from backend ...........
   const data = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/viewstudents"
+        "http://localhost:4000/api/v1/admin/viewstudents",
+        { params: { department, year } }
       );
-      const filterData = response.data.filter(
-        (e) => e.department === department && e.year === year
-      );
-      
-      setfetchstd(filterData);
+
+      const std = response.data.students;
+      setfetchstd(std);
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log("ERROR !! in takeAttendance.jsx:", error);
-      console.log("ERROR !!", error);
+      handleAxiosError(error);
     }
   };
 
+  //only ruyn when department and year change
   useEffect(() => {
-    data();
+    if (!department || !year) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
+    data();
   }, [department, year]);
 
-   const TakeAttendance = {
-      department,
-      year,
-      date,
-      attendance,
-    };
-//calculating total present and absent
-     setTimeout(() => {
-       let present = 0;
-       let absent = 0;
-       attendance.forEach((item) => {
-         if (item.status === true) {
-           present += 1;
-         } else {
-           absent += 1;
-         }
-       });
-       setTotalPresent(present);
-       setTotalAbsent(absent);
-     },500);
+  const TakeAttendance = {
+    department,
+    year,
+    date,
+    attendance,
+  };
+  //calculating total present and absent
+  setTimeout(() => {
+    let present = 0;
+    let absent = 0;
+    attendance.forEach((item) => {
+      if (item.status === true) {
+        present += 1;
+      } else {
+        absent += 1;
+      }
+    });
+    setTotalPresent(present);
+    setTotalAbsent(absent);
+  }, 500);
 
-     
- 
   //handle attendance
   const handleAttendance = (studentId, isPresent) => {
     const updatedAttendance = [...attendance];
-   function removeObj(array,id){
-      const index = array.findIndex(item => item.stdId === id);
+    function removeObj(array, id) {
+      const index = array.findIndex((item) => item.stdId === id);
       if (index !== -1) {
         array.splice(index, 1);
       }
-      console.log('array',array);
-      
+      console.log("array", array);
+
       return array;
     }
-    removeObj(updatedAttendance,studentId);
+    removeObj(updatedAttendance, studentId);
 
     updatedAttendance.push({
       stdId: studentId,
       status: isPresent,
     });
     setAttendance(updatedAttendance);
-    
   };
 
-
   //post attendancev reports
-const handleSubmit=async(e)=>{
-  e.preventDefault();
-  try {
-     if(!TakeAttendance && TakeAttendance.department === '' || TakeAttendance.year === '' || TakeAttendance.date === '' ) {
-       alert("Please fill all the fields");
-       return;
-     }
-       if(fetchstd.length !== TakeAttendance.attendance.length){
-       alert("Please mark atten dance for all students");
-       return;
-     }
-    await axios.post("http://localhost:4000/api/v1/admin/takeattendance", TakeAttendance);
-     alert("Attendance submitted successfully");
-     setAttendance([]);
-  } catch (error) {
-    console.log('Error in submitting attendance',error);
-    alert( error.response.data.error || 'Error in submitting attendance');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (
+        (!TakeAttendance && TakeAttendance.department === "") ||
+        TakeAttendance.year === "" ||
+        TakeAttendance.date === ""
+      ) {
+        toast.error("Please fill all the fields");
+        return;
+      }
+      if (fetchstd.length !== TakeAttendance.attendance.length) {
+        toast.error("Please mark atten dance for all students");
+        return;
+      }
+    toast.promise(
+  axios.post(
+    "http://localhost:4000/api/v1/admin/takeattendance",
+    TakeAttendance,
+    {
+      withCredentials: true,
+      headers: { "Content-Type": "application/json" },
+    }
+  ),
+  {
+    loading: "Publishing...",
+    success: (res) => {
+       setDepartment('');
+        setyear('');
+        setDate('');
+        setAttendance([]);
+        setfetchstd([])
+      return <b>{res.data.message || "Published successfully!"}</b>;
+    },
+    error: (err) => {
+      if ( err.response.data.error){    
+        return <b>{err.response.data.error}</b>;
+      } else {
+        return <b>Something went wrong!</b>;
+      }
+    },
   }
-
-}
+);   
+    } catch (error) {
+      console.log("Error in submitting attendance", error);
+      handleAxiosError(error);
+    }
+  };
 
   return (
     <>
@@ -150,7 +180,7 @@ const handleSubmit=async(e)=>{
             </select>
           </div>
 
-          <div className="ml-200 flex justify-center items-center gap-2">
+          <div className="ml-20 flex justify-center items-center gap-2">
             <p className="font-bold">Date:-</p>
             <input
               onChange={(e) => {
@@ -159,6 +189,9 @@ const handleSubmit=async(e)=>{
               type="date"
               className="input w-60"
             />
+          </div>
+          <div className=" btn ml-130 bg-gradient-to-bl to-blue-500 from-pink-500 hover:bg-gradient-to-bl hover:to-pink-500 hover:from-blue-500 transition-all ">
+            <p className=" font-bold">View Attendance</p>
           </div>
         </div>
 
@@ -197,18 +230,32 @@ const handleSubmit=async(e)=>{
                             P
                           </button> */}
                           {(() => {
-                            const currentStatus = attendance.find(a => a.stdId === item._id)?.status;
+                            const currentStatus = attendance.find(
+                              (a) => a.stdId === item._id
+                            )?.status;
                             return (
                               <>
                                 <button
-                                  onClick={() => handleAttendance(item._id, true)}
-                                  className={`btn ${currentStatus === true ? 'bg-green-500 text-white' : 'bg-transparent text-green-500'}`}
+                                  onClick={() =>
+                                    handleAttendance(item._id, true)
+                                  }
+                                  className={`btn ${
+                                    currentStatus === true
+                                      ? "bg-green-500 text-white"
+                                      : "bg-transparent text-green-500"
+                                  }`}
                                 >
                                   P
                                 </button>
                                 <button
-                                  onClick={() => handleAttendance(item._id, false)}
-                                  className={`btn ml-2 ${currentStatus === false ? 'bg-red-500 text-white' : 'bg-transparent text-red-500'}`}
+                                  onClick={() =>
+                                    handleAttendance(item._id, false)
+                                  }
+                                  className={`btn ml-2 ${
+                                    currentStatus === false
+                                      ? "bg-red-500 text-white"
+                                      : "bg-transparent text-red-500"
+                                  }`}
                                 >
                                   A
                                 </button>
@@ -242,8 +289,9 @@ const handleSubmit=async(e)=>{
             <h3>Total Present={totalPresent}</h3>
             <h3 className="ml-">Total Absent={totalAbsent}</h3>
             <button
-            onClick={handleSubmit}
-            className="ml- bg-blue-500 btn text-white mt-2">
+              onClick={handleSubmit}
+              className="ml- bg-blue-500 btn text-white mt-2"
+            >
               Submit
             </button>
           </div>
