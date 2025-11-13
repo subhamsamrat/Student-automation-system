@@ -8,7 +8,8 @@ import {
   UpdateStudent,addResult,
   adminViewResult,
   payFees,
-  viewpayment
+  viewpayment,
+  viewAttendance
 } from "../controller/admin.controller.js";
 import adminMiddleware from "../middleware/admin.mid.js";
 
@@ -16,12 +17,13 @@ const router = express.Router();
 
 router.post("/adminlogin", adminLogin);
 router.post("/addstudent", adminMiddleware, addStudent);
-router.get("/viewstudents", adminViewAllStudents);
+router.get("/viewstudents",adminMiddleware, adminViewAllStudents);
 router.put("/updatestudent/:studentId", adminMiddleware, UpdateStudent);
 router.delete("/deletestudent/:studentId", adminMiddleware, deleteStudent);
 router.post("/takeattendance",adminMiddleware, takeAttendance);
-router.post("/addResult",addResult);
-router.get("/viewresults",adminViewResult);
+router.get("/viewattendance", adminMiddleware,viewAttendance);
+router.post("/addResult",adminMiddleware,addResult); 
+router.get("/viewresults",adminMiddleware,adminViewResult);
 router.post("/payment/:stdId",payFees);
 router.get("/viewpayment",viewpayment);
 

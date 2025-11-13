@@ -19,7 +19,11 @@ const TakeAttendance = () => {
     try {
       const response = await axios.get(
         "http://localhost:4000/api/v1/admin/viewstudents",
-        { params: { department, year } }
+        {
+          params: { department, year },
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
       );
 
       const std = response.data.students;
@@ -83,6 +87,8 @@ const TakeAttendance = () => {
     });
     setAttendance(updatedAttendance);
   };
+    
+   //open view result
 
   //post attendancev reports
   const handleSubmit = async (e) => {
@@ -190,8 +196,9 @@ const TakeAttendance = () => {
               className="input w-60"
             />
           </div>
-          <div className=" btn ml-130 bg-gradient-to-bl to-blue-500 from-pink-500 hover:bg-gradient-to-bl hover:to-pink-500 hover:from-blue-500 transition-all ">
-            <p className=" font-bold">View Attendance</p>
+          <div 
+          className=" btn ml-130 bg-gradient-to-bl to-blue-500 from-pink-500 hover:bg-gradient-to-bl hover:to-pink-500 hover:from-blue-500 transition-all ">
+            <a href="/viewattendance" className=" font-bold">View Attendance</a>
           </div>
         </div>
 

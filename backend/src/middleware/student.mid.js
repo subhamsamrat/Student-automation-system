@@ -9,7 +9,7 @@ export default function studentMiddleware(req,res,next){
     
    if(!token){
         console.log('No token provided');
-        return res.status(401).json({error:'No token provided'});
+        return res.status(401).json({error:'Unauthorize !! Pleas Login First'});
    } 
 
    //  if(!authHeader || !authHeader.startsWith('Bearer')){

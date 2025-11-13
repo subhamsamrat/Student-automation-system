@@ -4,6 +4,7 @@ import { Loading1 } from '@/utils/Loading.jsx';
 import axios from 'axios';
 import Result_modal from './Result_modal.jsx';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { handleAxiosError } from '@/utils/handleAxiosError';
 
 function ViewResult() {
   const [department, setDepartment] = useState('');
@@ -21,6 +22,7 @@ function ViewResult() {
       setResult(response.data.results || []);
     } catch (err) {
       console.error('Fetch error:', err);
+      handleAxiosError(err);
     } finally {
       setLoading(false);
     }

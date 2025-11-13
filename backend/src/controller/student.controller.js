@@ -194,7 +194,7 @@ export const attendance = async (req, res) => {
         rollNo: student.rollNo,
         studentName: student.studentName,
         image: student.image.url,        // make sure schema has image field
-        percentage: percentage.toFixed(2),
+        percentage: percentage.toFixed(2)
       });
     }
 
