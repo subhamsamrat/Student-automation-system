@@ -48,7 +48,7 @@ if (localUser) {
           <a href="/addresult">Results</a>
         </li>
         <li>
-          <a href="/account">Account</a>
+          <a href="/payment">Account</a>
         </li>
       </>
     );

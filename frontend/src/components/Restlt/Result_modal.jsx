@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function Result_modal({ data }) {
   const [result, setResult] = useState([]);
-
+         
   const department = data?.department;
   const year = data?.year;
 
@@ -13,6 +13,8 @@ function Result_modal({ data }) {
       try {
         const response = await axios.get('http://localhost:4000/api/v1/admin/viewstudents', {
           params: { department, year },
+           withCredentials:true,
+        headers:{'Content-Type':'application/json'}
         });
 
         const info = [];

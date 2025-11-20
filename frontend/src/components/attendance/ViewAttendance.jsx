@@ -43,7 +43,7 @@ function ViewAttendance() {
     <>
       <div>
         <Navbar />
-        <div className="bg-sky-500/20 h-full">
+        <div className="bg-sky-500/20 h-screen ">
           <div
             className="text-2xl btn h-9 w-9 p-1.5 absolute top-23 left-4 cursor-pointer rounded-[50%] hover:bg-sky-500 bg-sky-400"
             onClick={() => window.history.back()}

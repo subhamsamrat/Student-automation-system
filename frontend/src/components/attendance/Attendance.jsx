@@ -59,15 +59,15 @@ function Attendance() {
         <Navbar />
       </div>
       <div className="md:h-100 h-70 w-full">
-        <div className="md:px-20  h-full">
+        <div className="md:px-20  w-full h-[300px] ">
           <h1
             className={`text-center md:text-3xl text-[5.5vw] mt-5 mb-5 md:mb-0 font-bold bg-gradient-to-r from-fuchsia-500 to-red-500  `}
           >
             -:Bar Diagram of Your Attendance:-
           </h1>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height='100%'>
             <BarChart
-              className="md:text-sm md:px-20 text-[3vw] "
+              className="md:text-sm md:px-20 text-[3vw] h-200 w-200 "
               width={500}
               height={300}
               data={myData}

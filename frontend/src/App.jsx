@@ -12,6 +12,7 @@ import Attendance from './components/attendance/Attendance.jsx'
 import AddResult from './components/Restlt/AddResult'
 import ViewResult from './components/Restlt/ViewResult'
 import ViewAttendance from './components/attendance/ViewAttendance'
+import Admin_acc from './components/account/Admin_acc'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -44,6 +45,7 @@ const user=useContext(authContext);
     <Route path='/viewattendance' element={<ViewAttendance/>}/> 
         <Route path='/addresult' element={<AddResult/>}/> 
         <Route path='/viewresult' element={<ViewResult/>}/> 
+        <Route path='/payment' element={<Admin_acc/>}/> 
        
        </Routes>
 

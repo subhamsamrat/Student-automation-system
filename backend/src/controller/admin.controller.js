@@ -513,7 +513,6 @@ export const payFees = async (req, res) => {
   const { stdId } = req.params;
   try {
     //check user exist or not in studentList
-    // console.log("stdId=", stdId);
     const isExist = await StudentSchema.findById(stdId);
     console.log("isExist=", isExist.studentName, "  ", isExist.rollNo);
 
@@ -538,7 +537,7 @@ export const payFees = async (req, res) => {
       totalAmount = 120000;
     } else if (["plus2", "diploma"].includes(department)) {
       totalAmount = 110000;
-    } else if (department === "b_tech") {
+    } else if (department === "B_tech") {
       totalAmount = 160000;
     } else {
       return res.status(400).json({ error: "Invalid department" });
@@ -565,7 +564,7 @@ export const payFees = async (req, res) => {
         totalAmount,
         totalDipositAmount: payAmount,
         remainAmount: totalAmount - payAmount,
-        history: [paymentEntry],
+        history: [paymentEntry]
       });
     } else {
       //update existing payment
