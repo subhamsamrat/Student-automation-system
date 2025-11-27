@@ -8,8 +8,9 @@ import {
   UpdateStudent,addResult,
   adminViewResult,
   payFees,
-  viewpayment,
-  viewAttendance
+  admin_account,
+  viewAttendance,
+  viewPayment
 } from "../controller/admin.controller.js";
 import adminMiddleware from "../middleware/admin.mid.js";
 
@@ -25,6 +26,7 @@ router.get("/viewattendance", adminMiddleware,viewAttendance);
 router.post("/addResult",adminMiddleware,addResult); 
 router.get("/viewresults",adminMiddleware,adminViewResult);
 router.post("/payment/:stdId",payFees);
-router.get("/viewpayment",viewpayment);
+router.get("/admin_account",admin_account);
+router.get("/view_payment/:stdId",viewPayment);
 
 export default router;

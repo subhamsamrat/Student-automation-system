@@ -1,8 +1,56 @@
-import React, {useEffect} from "react";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+import axios, { all } from "axios";
+import React, {useEffect, useState} from "react";
+import { set } from "react-hook-form";
 
-function paymentdetail_modal({ data }) {
+function Paymentdetail_modal({ data }) {
 
+const [department,setDepartment]=useState('');
+const [year,setYear]=useState('');
+const [stdName,setstdName]=useState('');
+const [totalAmount,setTotalAmount]=useState('');
+const [paidAmount,setPaidAmount]=useState('');
+const [history,setHistory]=useState([]);
 
+  function allstates(){
+    setDepartment('');
+    setYear('');
+    setstdName('');
+    setTotalAmount('');
+    setPaidAmount('');
+    setHistory([]);
+  }
+
+  const getData=async ()=>{
+             try {
+        
+
+                if(data?.stdId){  
+                  const res=await axios.get(`http://localhost:4000/api/v1/admin/view_payment/${data.stdId}`,{
+                    withCredentials:true,
+                    headers:{"Content-Type":"application/json"}
+                  });
+                  console.log('res=',res);
+                  if(res?.data?.message){
+                    setDepartment(res.data.record.department);
+                    setYear(res.data.record.year);
+                    setstdName(res.data.record.studentName);
+                    setTotalAmount(res.data.record.totalAmount);
+                    setPaidAmount(res.data.record.totalDipositAmount);
+                    setHistory(res.data.record.history);
+                  };
+                }
+
+             } catch (error) {
+              console.log("ERROR !!  getting data in payment detail modal",error);
+              handleAxiosError(error);
+             }
+  };
+
+  useEffect(()=>{
+    console.log('use Effrct run');
+    
+    getData();},[data?.stdId]);     
   return (
     <dialog
       id="paymentDetails_modal"
@@ -16,7 +64,7 @@ function paymentdetail_modal({ data }) {
           </h3>
           <button
           
-            onClick={()=>{document.getElementById("paymentDetails_modal").close();}}
+            onClick={()=>{document.getElementById("paymentDetails_modal").close(),allstates()}}
             className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-200/50 dark:hover:bg-white/10"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-700 dark:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -28,27 +76,27 @@ function paymentdetail_modal({ data }) {
         {/* Student Info */}
         <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-2">
           <div className="p-4 bg-white/60 dark:bg-slate-800/60 rounded-xl border border-white/30 shadow grid gap-1">
-            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Name:</span> subham samrat jena</p>
-            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Roll No:</span> 1234345</p>
-            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Department:</span> MCA</p>
-            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Year:</span> 3rd yr</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Name:</span> {stdName}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Roll No:</span> {data?.rollNo??"----"}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Department:</span> {department}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300"><span className="font-semibold">Year:</span> {year}</p>
           </div>
 
           {/* Fee Summary */}
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-xl p-4 bg-blue-500 text-white shadow-lg">
               <p className="text-xs opacity-80">Total Fee</p>
-              <p className="text-md font-bold">₹{data?.totalFee ?? 0}</p>
+              <p className="text-md font-bold">₹{totalAmount}</p>
             </div>
 
             <div className="rounded-xl p-4 bg-green-500 text-white shadow-lg">
               <p className="text-xs opacity-80">Paid</p>
-              <p className="text-lg font-bold">₹{data?.paidFee ?? 0}</p>
+              <p className="text-lg font-bold">₹{paidAmount}</p>
             </div>
 
             <div className="rounded-xl p-4 bg-red-500 text-white shadow-lg">
               <p className="text-xs opacity-80">Remaining</p>
-              <p className="text-lg font-bold">₹{(data?.totalFee ?? 0) - (data?.paidFee ?? 0)}</p>
+              <p className="text-lg font-bold">₹{(totalAmount ?? 0) - (paidAmount ?? 0)}</p>
             </div>
           </div>
         </div>
@@ -71,15 +119,17 @@ function paymentdetail_modal({ data }) {
               </thead>
 
               <tbody>
-                {data?.history?.length ? (
-                  data.history.map((h, i) => (
-                    <tr key={i} className="border-t border-white/10 hover:bg-white/40 dark:hover:bg-slate-700/40">
+                {history?.length ? (
+                  
+                  history.map((h, i) => {
+                    const date = new Date(h.date);
+                    return (<tr key={i} className="border-t border-white/10 hover:bg-white/40 dark:hover:bg-slate-700/40">
                       <td className="p-3">{h.paymentId}</td>
                       <td className="p-3">₹{h.amount}</td>
-                      <td className="p-3">{h.mode}</td>
-                      <td className="p-3">{h.date}</td>
-                    </tr>
-                  ))
+                      <td className="p-3">{h.payMode}</td>
+                      <td className="p-3">{date.toLocaleDateString()}</td>
+                    </tr>);
+              })
                 ) : (
                   <tr>
                     <td colSpan="4" className="p-4 text-center text-slate-500">
@@ -96,4 +146,4 @@ function paymentdetail_modal({ data }) {
   );
 }
 
-export default paymentdetail_modal;
+export default Paymentdetail_modal;

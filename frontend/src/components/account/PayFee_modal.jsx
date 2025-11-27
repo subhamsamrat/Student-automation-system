@@ -1,53 +1,28 @@
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 
-
 function PayFee_modal({ data }) {
-  const dialogRef = useRef(null);
   const [paymentMode, setPaymentMode] = useState("");
   const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
   const [paymentId, setPaymentId] = useState("");
-  const [remarks, setRemarks] = useState("");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  // Close on ESC handled by <dialog>, but ensure backdrop click closes too
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-
-    const onBackdropClick = (e) => {
-      // If user clicked directly on the dialog (backdrop area), close
-      if (e.target === dialog) {
-        dialog.close();
-        resetState();
-      }
-    };
-
-    dialog.addEventListener("click", onBackdropClick);
-    return () => dialog.removeEventListener("click", onBackdropClick);
-  }, []);
+  const [success, setSuccess] = useState("");
 
   function resetState() {
     setPaymentMode("");
     setAmount("");
     setPaymentId("");
-    setRemarks("");
+
     setErrors({});
     setSubmitting(false);
     setSuccess(false);
   }
 
-  const generatePaymentId = () => {
-    // More readable ID with timestamp
-    const id = `TXN-${Date.now().toString().slice(-8)}-${Math.floor(
-      Math.random() * 900 + 100
-    )}`;
-    setPaymentId(id);
-  };
-
   const validate = () => {
     const err = {};
+    if (!paymentId) err.paymentId = "Enter Payment ID";
     if (!paymentMode) err.paymentMode = "Select payment mode";
     if (!amount || Number(amount) <= 0) err.amount = "Enter a valid amount";
     return err;
@@ -61,56 +36,49 @@ function PayFee_modal({ data }) {
       setErrors(err);
       return;
     }
-
     setSubmitting(true);
 
-    // Simulate API call / processing
     try {
-      await new Promise((r) => setTimeout(r, 700));
+      await new Promise((r) => setTimeout(r, 1000));
 
       const payload = {
-        student: data ?? null,
-        paymentMode,
-        amount: Number(amount),
-        paymentId: paymentId || `TXN-${Date.now()}`,
-        remarks,
-        timestamp: new Date().toISOString(),
+        payMode: paymentMode,
+        payAmount: Number(amount),
+        paymentId,
+        dateOfPay: date,
       };
 
-      // Replace this with your real submit logic (API call)
-      console.log("PAYMENT SUBMIT", payload);
+      const postReq = await axios.post(
+        `http://localhost:4000/api/v1/admin/payment/${data.stdId}`,
+        payload,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
-      // show success state
-      setSuccess(true);
+      setSuccess(postReq.data.message || "Payment successfully");
 
-      // auto-close after short delay
       setTimeout(() => {
-        if (dialogRef.current) dialogRef.current.close();
+        document.getElementById("payFee_modal").close();
         resetState();
-      }, 1100);
+        window.location.reload();
+      }, 3000);
     } catch (err) {
       console.error(err);
-      setErrors({ submit: "Something went wrong. Try again." });
+      setErrors({ submit: err.response?.data?.message || "Submission failed" });
       setSubmitting(false);
     }
   };
 
   return (
     <>
-      {/* Example open button (you can remove this if you open modal elsewhere) */}
-
-      {/* Dialog uses the exact id you requested */}
       <dialog
         id="payFee_modal"
-        ref={dialogRef}
-        className="w-full max-w-md rounded-2xl border-0 p-0 bg-transparent mt-20 md:ml-140"
-        // style to remove default dialog look in some browsers
+        className="w-full max-w-md rounded-2xl border-0 p-0 bg-transparent mt-20 md:ml-140 "
       >
-        {/* Backdrop + centered card */}
-        <div className="relative min-h-[360px] max-h-[85vh] overflow-hidden">
-          {/* Card container */}
-          <div className="mx-6 my-8 bg-gradient-to-b from-white/70 to-black/50 dark:from-slate-900/80 dark:to-slate-900/70 backdrop-blur-md rounded-2xl shadow-2xl border border-white/30  overflow-hidden">
-            {/* Header */}
+        <div className="relative min-h-[360px] max-h-[85vh] overflow-hidden ">
+          <div className="mx-6 my-8 bg-gradient-to-b from-white/70 to-black/50 backdrop-blur-md rounded-2xl shadow-2xl border border-white/30  overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/30 dark:border-slate-700">
               <div>
                 <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
@@ -121,10 +89,9 @@ function PayFee_modal({ data }) {
                 </p>
               </div>
 
-              {/* Close */}
               <button
                 onClick={() => {
-                  dialogRef.current?.close();
+                  document.getElementById("payFee_modal").close();
                   resetState();
                 }}
                 aria-label="Close"
@@ -148,35 +115,40 @@ function PayFee_modal({ data }) {
               </button>
             </div>
 
-            {/* Content */}
             <form onSubmit={handleSubmit} className="px-6 py-5">
-              {/* student info */}
               {data && (
-                <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-white dark:from-slate-800 dark:to-slate-900 border border-indigo-100/40">
-                  <div className="text-sm text-slate-700 dark:text-slate-200">
+                <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-white border border-indigo-100/40">
+                  <div className="text-sm text-slate-700 ">
                     <div className="font-medium">Name :{data.name}</div>
-                    <div className="text-xs text-slate-500">
-                      Roll: {data.roll ?? "—"}
+                    <div className="text-xs text-slate-500 mt-2">
+                      Roll: {data.rollNo}
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Payment ID and Auto button */}
-              <div className="flex gap-3 mb-3">
+              {/* Payment ID */}
+              <div className="flex gap-3 mb-1">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
-                    Payment ID
+                    Payment ID <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={paymentId}
                     onChange={(e) => setPaymentId(e.target.value)}
-                    placeholder="Transaction / Reference ID (optional)"
-                    className="w-full rounded-xl px-4 py-2 text-sm outline-none bg-white/80 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
+                    placeholder="Transaction / Reference ID"
+                    className={`w-full rounded-xl px-4 py-2 text-sm outline-none bg-white/80 dark:bg-slate-800 text-slate-800 dark:text-slate-100
+                      ${errors.paymentId ? "ring-2 ring-rose-300" : ""}`}
                   />
                 </div>
               </div>
+
+              {/* Payment ID ERROR MESSAGE */}
+              {errors.paymentId && (
+                <p className="text-rose-500 text-xs mb-3">{errors.paymentId}</p>
+              )}
+
               {/* Date */}
               <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Date
@@ -184,7 +156,6 @@ function PayFee_modal({ data }) {
               <div className="relative mb-3">
                 <input
                   type="date"
-                  //value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full rounded-xl px-4 py-2 text-sm outline-none bg-white/80 dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                 />
@@ -210,7 +181,6 @@ function PayFee_modal({ data }) {
                   <option value="Cheque">Cheque</option>
                 </select>
 
-                {/* custom chevron */}
                 <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
                   <svg
                     className="w-4 h-4 text-slate-400"
@@ -221,6 +191,7 @@ function PayFee_modal({ data }) {
                   </svg>
                 </div>
               </div>
+
               {errors.paymentMode && (
                 <p className="text-rose-500 text-xs mb-2">
                   {errors.paymentMode}
@@ -249,12 +220,11 @@ function PayFee_modal({ data }) {
                 <p className="text-rose-500 text-xs mb-2">{errors.submit}</p>
               )}
 
-              {/* Buttons */}
               <div className="flex items-center justify-between gap-3 mt-2">
                 <button
                   type="button"
                   onClick={() => {
-                    dialogRef.current?.close();
+                    document.getElementById("payFee_modal").close();
                     resetState();
                   }}
                   className="flex-1 px-4 py-2 rounded-xl text-sm bg-rose-500 text-white hover:bg-rose-600 active:scale-95 transition"
@@ -277,9 +247,8 @@ function PayFee_modal({ data }) {
               </div>
             </form>
 
-            {/* Success animation */}
             {success && (
-              <div className="absolute inset-0 flex items-center justify-center bg-yellow-500  dark:bg-slate-900/60">
+              <div className="absolute inset-0 flex items-center justify-center bg-yellow-500">
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-20 h-20 rounded-full bg-green-600 flex items-center justify-center shadow-lg animate-scale-up">
                     <svg
@@ -297,7 +266,7 @@ function PayFee_modal({ data }) {
                     </svg>
                   </div>
                   <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                    Payment Recorded Successfilly
+                    {success}
                   </div>
                 </div>
               </div>

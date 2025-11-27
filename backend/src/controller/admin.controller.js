@@ -20,8 +20,6 @@ export const adminLogin = async (req, res) => {
     }
 
     const existAdmin = await loginAdmin.findOne({ email });
-
-    const compPassword = bcrypt.compare(password, existAdmin.password);
     if (!existAdmin) {
       console.log("❌ERROR !! admin with email not exist");
       return res.status(404).json({ error: "❌Wrong cradential" });
@@ -42,16 +40,20 @@ export const adminLogin = async (req, res) => {
       sameSite: "strict",
     };
 
+    console.log('password=',password,'back pass=',existAdmin.password);
+    
+
+     const compPassword = bcrypt.compare(password, existAdmin.password);
     if (compPassword) {
-      console.log("Login successfully ✅", existAdmin);
       res.cookie("jwt", token, cookieOption);
+       console.log("Login successfully ✅", existAdmin);
       return res
         .status(201)
         .json({ message: "Login Successfully ✅ ", token, existAdmin });
     }
   } catch (error) {
     console.log("❌Error !! in admin login:", error);
-    res.status(500).json({ error: "internalserver error❌" });
+    res.status(500).json({ error: "Internal server error❌" });
   }
 };
 
@@ -380,33 +382,39 @@ export const viewAttendance = async (req, res) => {
       );
       return res
         .status(404)
-        .json({ error: "Please select department and year" });}
+        .json({ error: "Please select department and year" });
+    }
 
     const student = await StudentSchema.find({ department, year });
-     if (!student || student.length === 0) { //student check
-      console.log('ERROR !! in view attendaance controller studennt not found');
+    if (!student || student.length === 0) {
+      //student check
+      console.log("ERROR !! in view attendaance controller studennt not found");
       return res.status(404).json({ error: "No students found" });
     }
 
     const attendanceRecord = await AttendanceSchema.find({ department, year });
-  //attendance record check
+    //attendance record check
     if (!attendanceRecord) {
-      console.log("ERROR !! in admin viewattendance controller attendance data not found");
+      console.log(
+        "ERROR !! in admin viewattendance controller attendance data not found"
+      );
       return res.status(404).json({ error: "AttendanceRecord Not Found" });
     }
-    let filterRecord=attendanceRecord;
-    if(filtermonth){
-      filterRecord=attendanceRecord.filter((rec)=>{
-        const recMonth=new Date(rec.date).getMonth()+1;
-        return recMonth===parseInt(filtermonth);
+    let filterRecord = attendanceRecord;
+    if (filtermonth) {
+      filterRecord = attendanceRecord.filter((rec) => {
+        const recMonth = new Date(rec.date).getMonth() + 1;
+        return recMonth === parseInt(filtermonth);
       });
     }
     //final check
-    if(!filterRecord){
-      console.log('ERROR !! in view attendance controller filter record not found');
-      return res.status(404).json({error:'No Record Found'});
+    if (!filterRecord) {
+      console.log(
+        "ERROR !! in view attendance controller filter record not found"
+      );
+      return res.status(404).json({ error: "No Record Found" });
     }
-     // result for each student
+    // result for each student
     const result = student.map((std) => {
       let present = 0;
       let absent = 0;
@@ -433,8 +441,9 @@ export const viewAttendance = async (req, res) => {
       };
     });
 
-      return res.status(200).json({ message: "Fetch Attendance successfull",result});
-     
+    return res
+      .status(200)
+      .json({ message: "Fetch Attendance successfull", result });
   } catch (error) {
     console.log("ERROR !! in admin view Attendance controller :", error);
     return res.status(500).jspn({ error: "Internal server error" });
@@ -514,7 +523,7 @@ export const payFees = async (req, res) => {
   try {
     //check user exist or not in studentList
     const isExist = await StudentSchema.findById(stdId);
-    console.log("isExist=", isExist.studentName, "  ", isExist.rollNo);
+    console.log("isExist=",payMode, payAmount, paymentId, dateOfPay );
 
     if (!isExist) {
       console.log("ERROR !! in payFee controller user not exist");
@@ -538,7 +547,7 @@ export const payFees = async (req, res) => {
     } else if (["plus2", "diploma"].includes(department)) {
       totalAmount = 110000;
     } else if (department === "B_tech") {
-      totalAmount = 160000;
+      totalAmount = 200000;
     } else {
       return res.status(400).json({ error: "Invalid department" });
     }
@@ -550,7 +559,6 @@ export const payFees = async (req, res) => {
       paymentId,
       date: new Date(dateOfPay),
     };
-    //console.log(paymentEntry);
 
     const existingpayment = await paymentSchema.findOne({ stdId });
     let updatePayment;
@@ -564,7 +572,7 @@ export const payFees = async (req, res) => {
         totalAmount,
         totalDipositAmount: payAmount,
         remainAmount: totalAmount - payAmount,
-        history: [paymentEntry]
+        history: [paymentEntry],
       });
     } else {
       //update existing payment
@@ -591,15 +599,96 @@ export const payFees = async (req, res) => {
   }
 };
 
-//view payments
-export const viewpayment = async (req, res) => {
+//view  payments hero page
+export const admin_account = async (req, res) => {
   try {
     const payments = await paymentSchema.find();
+
+    if (!payments || payments.length === 0) {
+      console.log(
+        "ERROR !! in admin_account controller no payment record found"
+      );
+      return res.status(404).json({ error: "No Payment Record Found" });
+    }
+
+    //getting students
+    const students = [];
+    if (req.query) {
+      const { department, year } = req.query;
+      const res = await StudentSchema.find({ department, year });
+
+      res.forEach((e) => {
+        students.push({
+          stdId: e._id,
+          studentName: e.studentName,
+          rollNo: e.rollNo,
+        });
+      });
+    }
+
+    //total collection
+    const totalcollection = payments.reduce((acc, cur) => {
+      return acc + cur.totalDipositAmount;
+    }, 0);
+
+    const months = [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec",
+    ];
+
+    const monthlyCollection = months.map((m) => ({
+      name: m,
+      collection_amount: 0,
+    }));
+    //calculate monthly collections
+    payments.forEach((e) => {
+      e.history.forEach((f) => {
+        const monthIndex = new Date(f.date).getMonth();
+        monthlyCollection[monthIndex].collection_amount += f.amount;
+      });
+    });
+
+ 
+     
     return res
       .status(200)
-      .json({ message: "payment fetched successfully" }, payments);
+      .json({
+        message: "payment fetched successfully",
+        totalcollection,
+        monthlyCollection,
+        students,
+      });
   } catch (error) {
     console.log("ERROR !! in view payment controller:", error);
     return res.status(500).json({ error: "internal server error" });
   }
+};
+
+//viwe pay detail
+export const viewPayment=async (req,res)=>{
+  const {stdId}=req.params;
+   try {
+     
+    const existStd=await paymentSchema.findOne({stdId});
+    if(!existStd){
+      console.log('ERROR !! in viewPayment controller Student doesnt exist or No payment Initiate !!');
+      return res.status(404).json({error:'No payment Initiated'});
+    }
+   
+      console.log("Data fetch successfully");
+    return res.status(200).json({message:"data fetch Successfully",record:existStd});
+   } catch (error) {
+    console.log('ERROR !! in viewpayment controller',error);
+    return res.status("ONternal server error");
+   }
 };
