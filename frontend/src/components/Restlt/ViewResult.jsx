@@ -17,7 +17,7 @@ function ViewResult() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:4000/api/v1/admin/viewresults', {
+      const response = await axios.get('https://student-automation-system.onrender.com/api/v1/admin/viewresults', {
         params: { department, year },
         withCredentials:true,
         headers:{'Content-Type':'application/json'}
