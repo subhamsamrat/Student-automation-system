@@ -19,7 +19,7 @@ function Signup() {
   const onSubmit =async(data)=>{
     
     try {
-       const response=await axios.post('http://localhost:4000/api/v1/student/studentsignup',data);
+       const response=await axios.post('https://student-automation-system.onrender.com/api/v1/student/studentsignup',data);
        console.log('signup successfull');
        toast.success(response.data.message);
        setTimeout(()=>{ navigate('/');},1000)
