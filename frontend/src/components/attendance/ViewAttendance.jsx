@@ -16,7 +16,7 @@ function ViewAttendance() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/viewattendance",
+        "https://student-automation-system.onrender.com/api/v1/admin/viewattendance",
         {
           params: { department, year, filtermonth },
           withCredentials: true,
