@@ -19,7 +19,7 @@ function DltStdModal({ data, open }) {
       if (value.trim() === deleteKey) {
          
          const response = await axios.delete(
-        `http://localhost:4000/api/v1/admin/deletestudent/${data.stdId}`,
+        `https://student-automation-system.onrender.com/api/v1/admin/deletestudent/${data.stdId}`,
         {
           withCredentials: true,
         }
