@@ -45,99 +45,122 @@ function ViewResult() {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="bg-lime-500/20 min-h-screen">
-       <div className="text-2xl btn h-9 w-9 p-1.5 absolute top-23 left-4 cursor-pointer rounded-[50%] hover:bg-lime-500 bg-lime-400" onClick={() => window.history.back()}>
-         <IoMdArrowRoundBack />
-        </div>
-        <h1 className="text-center pt-3 font-bold text-2xl underline">View Results</h1>
+  <>
+    <Navbar />
 
-        {/* Select fields */}
-        <div className="px-20 mt-3">
-          <select
-            defaultValue="Select Department"
-            className="select select-info bg-lime-500/20"
-            onChange={(e) => setDepartment(e.target.value)}
-          >
-            <option disabled>Select Department</option>
-            <option>+2-Science</option>
-            <option>+3-Science</option>
-            <option>BCA</option>
-            <option>BBA</option>
-            <option>BBT</option>
-            <option>B-Tech</option>
-            <option>MBA</option>
-            <option>MCA</option>
-          </select>
+    <div className="bg-gradient-to-br from-lime-100 to-lime-300 min-h-screen p-3 md:p-6 relative">
 
-          <select
-            defaultValue="Select Year"
-            className="select select-info ml-10 bg-lime-500/20"
-            onChange={(e) => setYear(e.target.value)}
-          >
-            <option disabled>Select Year</option>
-            {department === '+2-Science' || department === 'MBA' || department === 'MCA' ? (
-              <>
-                <option value="1st yr">1st year</option>
-                <option value="2nd yr">2nd year</option>
-              </>
-            ) : department === 'BCA' ||
-              department === 'BBA' ||
-              department === 'BBT' ||
-              department === '+3-Science' ? (
-              <>
-                <option value="1st yr">1st year</option>
-                <option value="2nd yr">2nd year</option>
-                <option value="3rd yr">3rd year</option>
-              </>
-            ) : department === 'B-Tech' ? (
-              <>
-                <option value="1st yr">1st year</option>
-                <option value="2nd yr">2nd year</option>
-                <option value="3rd yr">3rd year</option>
-                <option value="4th yr">4th year</option>
-              </>
-            ) : null}
-          </select>
-        </div>
-
-        {/* Exam List */}
-        <h1  className="mt-5 h-10 text-2xl text-white font-bold underline text-center bg-gradient-to-bl to-blue-900 from-blue-500">
-          Exam List
-        </h1>
-
-        <div className=" mx-40 mt-3">
-          {loading ? (
-            <Loading1 />
-          ) : result.length > 0 ?(
-            result.map((e, idx) => {
-              const date = new Date(e.ExamDate);
-              return (
-                <div
-                  key={idx}
-                  className="flex items-center justify-around mt-3 bg-lime-400/60 rounded-xl shadow-xl p-3"
-                >
-                  <p>{idx + 1}</p>
-                  <p>{e.examName}</p>
-                  <p>{date.toLocaleDateString()}</p>
-                  <a
-                    className="text-blue-500 underline text-sm cursor-pointer"
-                    onClick={() => handleOpenModal(e)}
-                  >
-                    View Result
-                  </a>
-                </div>
-              );
-            })
-          ) : (
-            <h1 className="text-2xl h-20 mt-40 font-bold text-center">No Data Found</h1>
-          )}
-        </div>
-        <Result_modal id="result_modal" data={selectedResult} />
+      {/* Back Button */}
+      <div
+        className=" btn  h-10 w-10  font-bold text-2xl 
+        absolute top-4 left-4 cursor-pointer rounded-full 
+        hover:bg-lime-500 bg-lime-400 shadow-md"
+        onClick={() => window.history.back()}
+      >
+        <IoMdArrowRoundBack />
       </div>
-    </>
-  );
+
+      {/* Title */}
+      <h1 className="text-center pt-12 md:pt-2 font-bold text-3xl md:text-4xl bg-gradient-to-r from-blue-600 to-blue-900 text-transparent bg-clip-text">
+        View Results
+      </h1>
+
+      {/* Selection Controls */}
+      <div className="flex flex-wrap justify-center gap-4 mt-8 px-4">
+        <select
+          defaultValue="Select Department"
+          className="select select-info bg-white/70 w-full sm:w-56 shadow"
+          onChange={(e) => setDepartment(e.target.value)}
+        >
+          <option disabled>Select Department</option>
+          <option>+2-Science</option>
+          <option>+3-Science</option>
+          <option>BCA</option>
+          <option>BBA</option>
+          <option>BBT</option>
+          <option>B-Tech</option>
+          <option>MBA</option>
+          <option>MCA</option>
+        </select>
+
+        <select
+          defaultValue="Select Year"
+          className="select select-info bg-white/70 w-full sm:w-56 shadow"
+          onChange={(e) => setYear(e.target.value)}
+        >
+          <option disabled>Select Year</option>
+
+          {department === '+2-Science' || department === 'MBA' || department === 'MCA' ? (
+            <>
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+            </>
+          ) : department === 'BCA' ||
+            department === 'BBA' ||
+            department === 'BBT' ||
+            department === '+3-Science' ? (
+            <>
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+              <option value="3rd yr">3rd year</option>
+            </>
+          ) : department === 'B-Tech' ? (
+            <>
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+              <option value="3rd yr">3rd year</option>
+              <option value="4th yr">4th year</option>
+            </>
+          ) : null}
+        </select>
+      </div>
+
+      {/* Exam List Title */}
+      <h1 className="mt-8 text-xl md:text-2xl text-white font-bold text-center py-2 rounded-md
+        bg-gradient-to-r from-blue-500 to-blue-800 shadow">
+        Exam List
+      </h1>
+
+      {/* Results List */}
+      <div className="max-w-4xl mx-auto mt-6 px-2 md:px-0">
+        {loading ? (
+          <Loading1 />
+        ) : result.length > 0 ? (
+          result.map((e, idx) => {
+            const date = new Date(e.ExamDate);
+            return (
+              <div
+                key={idx}
+                className="flex flex-wrap md:flex-nowrap items-center justify-between 
+                bg-white/80 backdrop-blur-md border border-lime-400/50
+                rounded-xl shadow-lg px-4 py-3 mb-4
+                hover:shadow-xl hover:scale-[1.01] transition-all"
+              >
+                <p className="w-1/12 text-center font-semibold">{idx + 1}</p>
+                <p className="w-5/12 md:w-3/12 font-medium">{e.examName}</p>
+                <p className="w-4/12 md:w-3/12 text-gray-700">{date.toLocaleDateString()}</p>
+
+                <a
+                  className="text-blue-600 underline cursor-pointer font-semibold mt-2 md:mt-0"
+                  onClick={() => handleOpenModal(e)}
+                >
+                  View Result
+                </a>
+              </div>
+            );
+          })
+        ) : (
+          <h1 className="text-2xl font-bold text-center mt-20 text-gray-600">
+            No Data Found
+          </h1>
+        )}
+      </div>
+
+      <Result_modal id="result_modal" data={selectedResult} />
+    </div>
+  </>
+);
+
 }
 
 export default ViewResult;

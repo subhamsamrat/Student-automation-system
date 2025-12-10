@@ -1,7 +1,7 @@
 import { handleAxiosError } from "@/utils/handleAxiosError";
-import axios, { all } from "axios";
+import axios from "axios";
 import React, {useEffect, useState} from "react";
-import { set } from "react-hook-form";
+
 
 function Paymentdetail_modal({ data }) {
 

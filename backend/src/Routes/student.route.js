@@ -4,7 +4,7 @@ import studentMiddleware from '../middleware/student.mid.js';
 
 const router=express.Router();
 
-router.get('/students',students)
+router.get('/students',studentMiddleware,students)
 router.post('/studentsignup',studentSignup);
 router.post('/studentlogin',studentLogin);
 router.get('/attendance',studentMiddleware,attendance);

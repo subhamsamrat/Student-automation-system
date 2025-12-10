@@ -62,7 +62,6 @@ function PayFee_modal({ data }) {
       setTimeout(() => {
         document.getElementById("payFee_modal").close();
         resetState();
-        window.location.reload();
       }, 3000);
     } catch (err) {
       console.error(err);

@@ -13,43 +13,39 @@ import AddResult from './components/Restlt/AddResult'
 import ViewResult from './components/Restlt/ViewResult'
 import ViewAttendance from './components/attendance/ViewAttendance'
 import Admin_acc from './components/account/Admin_acc'
+import Viewstudent from './components/student/Viewstudent'
+import Addstudent from './components/student/Addstudent'
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
 const user=useContext(authContext);
-   // console.log(useContext(authContext));
-   function openLogin(){
-    
-    // const modal=document.getElementById("login_modal");
-    
-    //  if(modal) modal.showModal();
-    alert('Pleas login first');
-    
-   }
-   // console.log(user);
     
   return (
     <>
                  
        <Routes>
          <Route path='/' element={ <Home/> }/>
-        <Route path='/attendance' element={<Attendance/>}/>
+        <Route path='/attendance' element={user?<Attendance/>:<Navigate to='/signup'/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/login' element={<Login/>}/>
-        <Route path='/profile' element={<Profile/>}/>
+        <Route path='/profile' element={user?<Profile/>:<Navigate to='/signup'/>}/>
         <Route path='/result' element={ user?<Result/>:<Navigate to='/signup'/>}/>
-        <Route path='/account' element={<Account/>}/>
+        <Route path='/account' element={user?<Account/>:<Navigate to='/signup'/>}/>
     
         {/* ++++++++++++++admin++++++++++++++++++ */}
-    <Route path='/takeattendance' element={<TakeAttendance/>}/> 
-    <Route path='/viewattendance' element={<ViewAttendance/>}/> 
-        <Route path='/addresult' element={<AddResult/>}/> 
-        <Route path='/viewresult' element={<ViewResult/>}/> 
-        <Route path='/payment' element={<Admin_acc/>}/> 
+    <Route path='/takeattendance' element={user?<TakeAttendance/>:<Navigate to='/signup'/>}/> 
+    <Route path='/viewattendance' element={user?<ViewAttendance/>:<Navigate to='/signup'/>}/> 
+        <Route path='/addresult' element={user?<AddResult/>:<Navigate to='/signup'/>}/> 
+        <Route path='/viewresult' element={user?<ViewResult/>:<Navigate to='/signup'/>}/> 
+        <Route path='/payment' element={user?<Admin_acc/>:<Navigate to='/signup'/>}/> 
+        <Route path='/viewstudent' element={user?<Viewstudent/>:<Navigate to='/signup'/>}/> 
+        <Route path='/addstudent' element={user?<Addstudent/>:<Navigate to='/signup'/>}/> 
        
        </Routes>
 
-        { /* <Login/>   user?<Account/>:<Navigate to='/signup'/>*/}
+     
 
     </>
     

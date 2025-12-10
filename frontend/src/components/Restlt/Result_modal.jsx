@@ -3,28 +3,44 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Result_modal({ data }) {
+  
   const [result, setResult] = useState([]);
          
   const department = data?.department;
   const year = data?.year;
+  const role=JSON.parse(localStorage.getItem('user'))
+   
+  if(data){
+    var date=new Date(data.ExamDate)
+  }
+ 
 
-  useEffect(() => {
-    const stdDetails = async () => {
+   const stdDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/v1/admin/viewstudents', {
+        let apiResponse;
+        if(role.role==='admin'){
+            apiResponse = await axios.get('http://localhost:4000/api/v1/admin/viewstudents', {
+          params: { department, year },
+           withCredentials:true,
+        headers:{'Content-Type':'application/json'}
+        });   
+      }else if(role.role==='student'){
+           apiResponse = await axios.get('http://localhost:4000/api/v1/student/students', {
           params: { department, year },
            withCredentials:true,
         headers:{'Content-Type':'application/json'}
         });
-
-        const info = [];
+      }
+         
+      const info = [];
         data.stdResult.forEach((e) => {
-          response.data.students.forEach((item) => {
+          apiResponse.data.students.forEach((item) => {
             if (e.stdId === item._id) {
               info.push({
                 name: item.studentName,
                 rollNo: item.rollNo,
                 mark: e.mark,
+                ID:e.stdId
               });
             }
           });
@@ -36,11 +52,16 @@ function Result_modal({ data }) {
         handleAxiosError(error);
       }
     };
+  
 
+  useEffect(() => {
+    
     if (department && year) {
       stdDetails();
     }
-  }, [department, year, data]);
+  }, [data]);
+
+   
 
   return (
     <dialog id="result_modal" className="modal">
@@ -52,30 +73,32 @@ function Result_modal({ data }) {
           ✕
         </button>
 
-        <h3 className="font-bold text-2xl underline">Exam Name</h3>
+        <h3 className="font-bold text-2xl underline text-amber-500">{data?data.examName:'loading...'}</h3>
         <div className="flex mt-5">
-          <p className="font-bold">Exam Date:-</p>
-          <p className="ml-40 font-bold">Full Mark:-</p>
+          <p className="font-bold">Exam Date:- <span className='text-blue-400'>{date?date.toDateString():'loading...'}</span></p>
+          <p className="ml-40 font-bold">Full Mark:- <span className='text-blue-400'>{data?data.fullMark:'loading'}</span></p>
         </div>
 
-        <div className="overflow-auto hide-scrollbar">
+        <div className="overflow-auto hide-scrollbar mt-5"> 
           <table className="table">
             <thead>
-              <tr className="bg-slate-300 text-black sticky top-0">
+              <tr className="bg-gray-400 text-black sticky top-0">
                 <th>Name</th>
                 <th>Roll No</th>
                 <th>Mark</th>
-                {/* <th>Grade</th> */}
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {result.map((item, index) => (
-                <tr key={index}>
+                <tr key={index}
+                 className={`${
+                    index % 2 === 0 ? "bg-amber-50" : "bg-white"
+                  } ${role._id===item.ID ? "text-[#9416ee] font-extrabold" : ""} hover:bg-blue-50`}
+                >
                   <td>{item.name}</td>
                   <td>{item.rollNo}</td>
                   <td>{item.mark}</td>
-                  {/* <td>{item.mark > 59 ? 'A' : item.mark > 39 ? 'B' : 'C'}</td> */}
                   <td>
                     {item.mark < 30 ? (
                       <p className="text-red-500">Fail</p>

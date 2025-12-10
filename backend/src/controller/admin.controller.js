@@ -22,7 +22,7 @@ export const adminLogin = async (req, res) => {
     const existAdmin = await loginAdmin.findOne({ email });
     if (!existAdmin) {
       console.log("❌ERROR !! admin with email not exist");
-      return res.status(404).json({ error: "❌Wrong cradential" });
+      return res.status(404).json({ error:"Wrong cradential"});
     }
 
     const token = jwt.sign(
@@ -40,10 +40,11 @@ export const adminLogin = async (req, res) => {
       sameSite: "strict",
     };
 
-    console.log('password=',password,'back pass=',existAdmin.password);
-    
-
-     const compPassword = bcrypt.compare(password, existAdmin.password);
+     const compPassword =await bcrypt.compare(password, existAdmin.password);
+    if(!compPassword){
+      return res.status(400).json({error:"Wrong Password"});
+    }
+     
     if (compPassword) {
       res.cookie("jwt", token, cookieOption);
        console.log("Login successfully ✅", existAdmin);
@@ -77,7 +78,8 @@ export const addStudent = async (req, res) => {
   } = req.body;
 
   const { image } = req.files;
-
+      console.log('image=',image);
+      
   try {
     if (
       !studentName ||
@@ -86,10 +88,8 @@ export const addStudent = async (req, res) => {
       !gender ||
       !parentName ||
       !parentPhoneNo ||
-      !country ||
       !state ||
       !city ||
-      !zipCode ||
       !email ||
       !phoneNo ||
       !department ||
@@ -98,7 +98,7 @@ export const addStudent = async (req, res) => {
       console.log(
         "❌ERROR !! in addStudent controller: Missing required fields"
       );
-      return res.status(400).json({ error: "❌All fields are required" });
+      return res.status(400).json({ error: "❌All fields are required" }); 
     }
 
     if (phoneNo.length && phoneNo.length !== 10) {
@@ -133,7 +133,7 @@ export const addStudent = async (req, res) => {
         existStudent.email
       );
       return res.status(400).json({
-        error: "❌ Student with this email already exists:",
+        error: " Student with this email already exists:",
         email: existStudent.email,
       });
     }
@@ -149,10 +149,10 @@ export const addStudent = async (req, res) => {
       },
       parentName,
       parentPhoneNo,
-      country,
+      
       state,
       city,
-      zipCode,
+      
       email,
       phoneNo,
       department,
@@ -166,12 +166,30 @@ export const addStudent = async (req, res) => {
       .json({ message: "Student added successfully ✅ ", response });
   } catch (error) {
     console.log("❌ERROR !! in addStudent controller:", error);
-    res.status(500).json({ error: "❌internal server error" });
+    res.status(500).json({ error: "internal server error" });
   }
 };
 
-//adminview all students
-export const adminViewAllStudents = async (req, res) => {
+//admin view all students
+export const viewAllStd=async (req,res)=>{
+  try {
+     const data = await StudentSchema.find();
+    
+    if (!data) {
+      console.log("No data found");
+     return res.status(404).json("student data not found");
+    } else {
+      console.log("data fetch succesfully");
+     return res.status(200).json(data);
+    }
+  } catch (error) {
+    console.log("ERROR !! in view All student controller",error);
+    return res.status(500).json({error:'internal server error'});
+  }
+};
+
+//adminview students
+export const adminViewStudents = async (req, res) => {
   const { department, year } = req.query;
 
   try {
@@ -183,26 +201,18 @@ export const adminViewAllStudents = async (req, res) => {
         .status(400)
         .json({ error: "department and year are required" });
     }
-    console.log({ department, year });
 
     const students = await StudentSchema.find({ department, year });
-    console.log("Students found:", students);
+
     if (students.length === 0) {
       console.log("❌ERROR !! No students found");
       return res.status(404).json({ error: "No students found" });
     }
     console.log("Students retrieved successfully ✅", students);
-    res.status(200).json({ students });
+   return res.status(200).json({ students });
 
-    // const data = await StudentSchema.find();
+   
 
-    // if (!data) {
-    //   console.log("No data found");
-    //   res.status(404).json("student data not found");
-    // } else {
-    //   console.log("data fetch succesfully");
-    //   res.status(200).json(data);
-    // }
   } catch (error) {
     console.log("❌ERROR !! in adminViewAllStudents controller:", error);
     res.status(500).json({ error: "internal server error" });
@@ -228,33 +238,8 @@ export const UpdateStudent = async (req, res) => {
     department,
     year,
   } = req.body;
-  //const { image } = req.files;
-
+ 
   try {
-    // if (!studentName || !rollNo || !DOB || !gender || !parentName || !parentPhoneNo || !country || !state || !city || !zipCode || !email || !phoneNo || !department || !year) {
-    //   console.log('❌ERROR !! in UpdateStudent controller: Missing required fields');
-    //   return res.status(400).json({ error: "❌All fields are required" });
-    // }
-
-    // if (phoneNo.length && phoneNo.length !== 10) {
-    //   console.log('❌ERROR !! in UpdateStudent controller: Invalid phone number');
-    //   return res.status(400).json({ error: "❌Invalid phone number" });
-    // }
-
-    // if (!image || Object.keys(req.files).length === 0) {
-    //   return res.status(400).json({ error: 'No file uploaded' });
-    // }
-
-    // const allowedFormat = ['image/png', 'image/jpeg'];
-    // if (!allowedFormat.includes(image.mimetype)) {
-    //   return res.status(400).json({ error: 'invalid file format. Only JPG & PNG allowed' });
-    // }
-
-    //cloudinary code
-    // const cloud_response = await cloudinary.uploader.upload(image.tempFilePath);
-    // if (!cloud_response || cloud_response.error) {
-    //   return res.status(400).json({ error: 'ERROR !! in uploading file to cloudinary' });
-    // }
 
     const existStudent = await StudentSchema.findById({ _id: studentId });
     if (!existStudent) {
@@ -269,10 +254,6 @@ export const UpdateStudent = async (req, res) => {
         rollNo,
         DOB,
         gender,
-        // image: {
-        //   public_id: cloud_response.public_id,
-        //   url: cloud_response.secure_url
-        // },
         parentName,
         parentPhoneNo,
         country,
@@ -347,7 +328,6 @@ export const takeAttendance = async (req, res) => {
     }
 
     const isExist = await AttendanceSchema.findOne({ department, year, date });
-    console.log(isExist);
 
     if (isExist) {
       return res
@@ -469,11 +449,6 @@ export const addResult = async (req, res) => {
       return res.status(404).json({ error: "pleas provid all data" });
     }
 
-    //  const isExist=await resultSchema.findOne({examName,examDate});
-    //            if(isExist){
-    //             console.log('ERROR !! Exam have same name and date aleardy exist');
-    //             return res.status(409).json({error:'Exam have same name and date aleardy exist'});
-    //            }
     const newResult = new resultSchema({
       department,
       year,
@@ -507,7 +482,6 @@ export const adminViewResult = async (req, res) => {
       console.log("No Result Found !!");
       return res.status(404).json({ error: "NO result Found !!" });
     }
-    console.log(results);
 
     return res.status(200).json({ results });
   } catch (error) {
@@ -523,7 +497,6 @@ export const payFees = async (req, res) => {
   try {
     //check user exist or not in studentList
     const isExist = await StudentSchema.findById(stdId);
-    console.log("isExist=",payMode, payAmount, paymentId, dateOfPay );
 
     if (!isExist) {
       console.log("ERROR !! in payFee controller user not exist");

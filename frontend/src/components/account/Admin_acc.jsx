@@ -15,7 +15,6 @@ import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { FaCcAmazonPay } from "react-icons/fa";
 import { BiSolidUserDetail } from "react-icons/bi";
-import { set } from "react-hook-form";
 
 function Admin_acc() {
   const [department, setDepartment] = useState();
@@ -43,7 +42,6 @@ function Admin_acc() {
       setStudent(response.data.students);
       setLoading(false);
     } catch (error) {
-      console.log("ERROR !! in Admin_acc.jsx adminData function", error);
       handleAxiosError(error);
     }
   };
@@ -63,14 +61,15 @@ function Admin_acc() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="p-6 space-y-8 w-full">
+
+      <div className="p-4 md:p-6 space-y-8 w-full max-w-7xl mx-auto">
         {/* HEADER */}
-        <h1 className="text-3xl font-bold">Accounts & Payments Dashboard</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Accounts & Payments Dashboard</h1>
 
         {/* TOP CARDS */}
-        <div className="flex  justify-around  gap-">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             {
               title: "Total Fees Collected",
@@ -81,26 +80,23 @@ function Admin_acc() {
           ].map((item, i) => (
             <div
               key={i}
-              className="bg-fuchsia-500/30 shadow-md rounded-2xl p-4 border border-fuchsia-600 w-120"
+              className="bg-fuchsia-500/20 shadow-md rounded-2xl p-4 border border-fuchsia-400"
             >
-              <p className="text-sm text-gray-600">{item.title}</p>
-              <p className="text-xl font-bold mt-1">{item.value}</p>
+              <p className="text-sm text-gray-700">{item.title}</p>
+              <p className="text-xl md:text-2xl font-bold mt-1">{item.value}</p>
             </div>
           ))}
         </div>
 
-        {/* CHART PLACEHOLDERS */}
+        {/* CHARTS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <h1 className="absolute top-67 text-xl font-bold bg-white ml-8">
-            Monthly collections
-          </h1>
-          <div className="bg-white rounded-2xl shadow-md h-64 p-4 border ">
+          <div className="bg-white rounded-2xl shadow-md h-64 p-4 border relative">
+            <h1 className="text-lg font-bold absolute -top-5 bg-white px-2">Monthly Collections</h1>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={monthlyCollection}
                 margin={{ top: 20, right: 20, left: -20, bottom: 0 }}
               >
-                {/* Custom Gradient */}
                 <defs>
                   <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#6366f1" stopOpacity={0.9} />
@@ -108,68 +104,43 @@ function Admin_acc() {
                   </linearGradient>
                 </defs>
 
-                {/* Light Grid */}
                 <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" />
-
-                {/* Remove axis strokes & customize font */}
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: "#6b7280", fontSize: 12 }}
+                  tick={{ fill: "#6b7280", fontSize: 10 }}
                   axisLine={false}
                 />
                 <YAxis
-                  domain={[0, "dataMax + 200"]}
                   tick={{ fill: "#6b7280", fontSize: 10 }}
-                  tickFormatter={(val) => {
-                    if (val >= 10000000)
-                      return `${(val / 10000000).toFixed(1)} Cr`;
-                    if (val >= 100000) return `${(val / 100000).toFixed(1)} L`;
-                    if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
-                    return val;
-                  }}
                   axisLine={false}
                   tickLine={false}
                 />
-
-                {/* Nice tooltip */}
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: "10px",
-                    padding: "8px",
-                    border: "none",
-                  }}
-                  labelStyle={{ color: "#6366f1", fontWeight: "bold" }}
-                />
-
-                {/* Custom area */}
+                <Tooltip />
                 <Area
                   type="monotone"
                   dataKey="collection_amount"
                   stroke="#6366f1"
                   strokeWidth={3}
-                  fillOpacity={1}
                   fill="url(#colorPv)"
-                  animationDuration={1200}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
 
+          {/* Placeholder second chart */}
           <div className="bg-white rounded-2xl shadow-md h-64 flex items-center justify-center text-gray-500 border">
-            <p className="text-center">Fee Breakdown Chart </p>
+            <p className="text-center">Fee Breakdown Chart</p>
           </div>
         </div>
 
         {/* FILTERS */}
         <div className="bg-white p-4 rounded-2xl shadow-md border">
-          <div className="flex md:flex-row flex-col gap-5">
-            <h1 className="font-bold text-xl absolute top-161 md:top-139 bg-white md:ml-5">
-              Filters
-            </h1>
+          <h1 className="font-bold text-xl mb-4">Filters</h1>
 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <select
               defaultValue="By Department"
-              className="select select-info"
+              className="select select-info w-full"
               onChange={(e) => setDepartment(e.target.value)}
             >
               <option disabled>By Department</option>
@@ -185,44 +156,19 @@ function Admin_acc() {
 
             <select
               defaultValue="By Year"
-              className="select select-info "
-              onChange={(e) => {
-                setYear(e.target.value);
-              }}
+              className="select select-info w-full"
+              onChange={(e) => setYear(e.target.value)}
             >
               <option disabled>By Year</option>
-              {department === "+2-Science" ||
-              department === "MBA" ||
-              department === "MCA" ? (
-                <>
-                  <option value="1st yr">1st year</option>
-                  <option value="2nd yr">2nd year</option>
-                </>
-              ) : department === "BCA" ||
-                department === "BBA" ||
-                department === "BBT" ||
-                department === "+3-Science" ? (
-                <>
-                  <option value="1st yr">1st year</option>
-                  <option value="2nd yr">2nd year</option>
-                  <option value="3rd yr">3rd year</option>
-                </>
-              ) : department === "B-Tech" ? (
-                <>
-                  <option value="1st yr">1st year</option>
-                  <option value="2nd yr">2nd year</option>
-                  <option value="3rd yr">3rd year</option>
-                  <option value="4th yr">4th year</option>
-                </>
-              ) : null}
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+              <option value="3rd yr">3rd year</option>
+              <option value="4th yr">4th year</option>
             </select>
+
             <button
-              onClick={(e) => {
-                // setDepartment("");
-                // setYear("");
-                window.location.reload();
-              }}
-              className="w-30 border-1 btn ml-150 bg-amber-400 rounded-xl"
+              onClick={() => window.location.reload()}
+              className="btn bg-amber-400 w-full rounded-xl"
             >
               Clear Filters
             </button>
@@ -231,15 +177,15 @@ function Admin_acc() {
 
         {/* STUDENT TABLE */}
         {loading ? (
-          <div className="flex justify-center items-center h-50">
-            <span className="loading loading-bars loading-xl"></span>
+          <div className="flex justify-center items-center h-40">
+            <span className="loading loading-bars loading-lg"></span>
           </div>
         ) : student.length === 0 ? (
-          <div className="flex justify-center items-center text-xl font-bold h-50">
+          <div className="flex justify-center items-center text-xl font-bold h-40">
             <h1>No Student Found</h1>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-md border overflow-x-auto md:mx-20 ">
+          <div className="bg-white rounded-2xl shadow-md border overflow-x-auto">
             <table className="w-full text-sm text-center">
               <thead>
                 <tr className="border-b bg-gray-200">
@@ -254,8 +200,7 @@ function Admin_acc() {
                   <tr key={idx} className="border-b hover:bg-gray-100">
                     <td className="p-2">{e.studentName}</td>
                     <td className="p-2">{e.rollNo}</td>
-
-                    <td className="p-2 flex justify-center gap-10">
+                    <td className="p-2 flex justify-center gap-6">
                       <button
                         onClick={() =>
                           handlePayment({
@@ -264,19 +209,16 @@ function Admin_acc() {
                             rollNo: e.rollNo,
                           })
                         }
-                        className=" text-green- text-2xl cursor-pointer hover:text-green-400 hover:scale-120 transition duration-300 "
+                        className="text-green-600 text-2xl hover:scale-110 transition"
                       >
                         <FaCcAmazonPay />
                       </button>
 
                       <button
                         onClick={() =>
-                          handlePaymentDetail({
-                            stdId: e.stdId,
-                            rollNo: e.rollNo,
-                          })
+                          handlePaymentDetail({ stdId: e.stdId, rollNo: e.rollNo })
                         }
-                        className=" hover:text-blue-600 text-2xl border-1 hover:scale-120 transition duration-300"
+                        className="text-blue-600 text-2xl hover:scale-110 transition"
                       >
                         <BiSolidUserDetail />
                       </button>

@@ -41,6 +41,9 @@ if (localUser) {
         <li>
           <a href="/">Home</a>
         </li>
+         <li>
+          <a href="/viewstudent">Students</a>
+        </li>
         <li>
           <a href="/takeattendance">Attendance</a>
         </li>
@@ -50,6 +53,7 @@ if (localUser) {
         <li>
           <a href="/payment">Account</a>
         </li>
+       
       </>
     );
     role = "admin";
@@ -119,13 +123,15 @@ if (localUser) {
                 {navitem}
               </ul>
             </div>
-            <a className="md:ml-10 text-2xl font-bold">
-              S<span className="text-blue-600">A</span>S
-            </a>
+            {/* Logo */}
+            <div className="md:ml-10 text-2xl font-bold  h-12 w-40 ">
+              <img src="../logo.jpg" alt="Logo" className="h-full w-full"/>
+            </div>
           </div>
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1 ml-200">{navitem}</ul>
+            <ul className={`menu menu-horizontal px-1 ${role==='admin'?'ml-150':'ml-200'}`} >{navitem}</ul>
           </div>
+          {/* login / logout / profile */}
           <div>
             {user === "student" ? (
               <div>

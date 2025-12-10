@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import Login from './Login';
 import axios from 'axios';
-
+import { handleAxiosError } from '@/utils/handleAxiosError';
+import { toast } from 'react-toastify';
 
 function Signup() {
      
@@ -20,12 +21,13 @@ function Signup() {
     try {
        const response=await axios.post('http://localhost:4000/api/v1/student/studentsignup',data);
        console.log('signup successfull');
-       alert(response.data.message);
-      navigate('/');
+       toast.success(response.data.message);
+       setTimeout(()=>{ navigate('/');},1000)
+     
     } catch (error) {
 
       console.log('ERROR !! in signup.jsx',error);
-      alert(error.response.data.error || "something went wrong please try again later");     
+     handleAxiosError(error);    
     } 
              
     

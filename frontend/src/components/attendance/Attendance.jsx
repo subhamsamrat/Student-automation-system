@@ -1,6 +1,5 @@
 import axios from "axios";
 import Navbar from "../home/Navbar";
-import { Cookie } from "lucide-react";
 import React, { PureComponent, useContext, useEffect, useState } from "react";
 import {
   BarChart,
@@ -11,9 +10,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Cell,
-  Pie,
-  PieChart,
 } from "recharts";
 import { authContext } from "../../context/AuthContext.jsx";
 import '../../index.css';
@@ -58,10 +54,10 @@ function Attendance() {
       <div>
         <Navbar />
       </div>
-      <div className="md:h-100 h-70 w-full">
+      <div className="md:h-100 h-70 w-full mx-10">
         <div className="md:px-20  w-full h-[300px] ">
           <h1
-            className={`text-center md:text-3xl text-[5.5vw] mt-5 mb-5 md:mb-0 font-bold bg-gradient-to-r from-fuchsia-500 to-red-500  `}
+            className={`text-center md:text-3xl  text-[5.5vw] mt-5 mb-5 md:mb-0 font-bold bg-gradient-to-r from-fuchsia-500 to-red-500  `}
           >
             -:Bar Diagram of Your Attendance:-
           </h1>
@@ -95,9 +91,9 @@ function Attendance() {
       </div>
       {/* +++++++++++++++++++++++++++++++ 2nd part ++++++++++++++++++++++++++++++++ */}
 
-      <div className="h-100 w-full flex mt- flex-col md:flex-row">
+      <div className="h-100 w-full  flex mt-5 flex-col md:flex-row">
         <div className="md:w-1/2 flex flex-col items-center justify-center ">
-          <h1 className="text-[25px] md:text-3xl font-bold underline w-full md:mt-0 mt-15 bg-gradient-to-r from-lime-500 text-center mb-4  ">
+          <h1 className="text-[25px] md:text-3xl font-bold underline w-full ml-13 md:ml-0 md:mt-0 mt-15 md:bg-gradient-to-r from-lime-500 text-center mb-4  ">
             Highest Attendances
           </h1>
 
@@ -105,8 +101,8 @@ function Attendance() {
             <div>Loading...</div>
           ) : (
             <>
-              <div>
-                <div className="h-20 md:w-120 w-105 mx- rounded-md flex bg-gradient-to-tr from-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+              <div className="ml-20">
+                <div className="h-20 md:w-120 w-105  rounded-md flex bg-gradient-to-tr from-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
                   <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)] bg-cover overflow-hidden">
                     <img src={top3Std[0].image} alt="" />
                   </div>
@@ -122,7 +118,7 @@ function Attendance() {
                   </div>
                 </div>
 
-                <div className="h-20 md:w-120 w-110 mt-5 rounded-md flex bg-gradient-to-r from-purple-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+                <div className="h-20 md:w-120 w-105 mt-5 rounded-md flex bg-gradient-to-r from-purple-400 shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
                   <div className="w-1/5 rounded-full m-2 shadow-[0_4px_10px_rgba(0,0,0,0.3)] bg-cover overflow-hidden">
                     <img src={top3Std[1].image} alt="" />
                   </div>
@@ -156,53 +152,11 @@ function Attendance() {
           )}
         </div>
 
-        <div className="md:w-1/2 flex justify-center items-center flex-col  ml-15 ">
-          <h1 className="bg-gradient-to-l md:from-blue-500 to-blue-500 md:to-white text-2xl mt-8 h-10 w-full text-center font-bold underline">
+        <div className="md:w-1/2 flex justify-center items-center flex-col  ml-15  ">
+          <h1 className="md:bg-gradient-to-l md:from-blue-500 to-blue-500 md:to-white text-2xl mt-5 h-10 w-full text-center font-bold underline">
             Your card
           </h1>
-          {/* <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5 border border-base-content/30 hover:rotate-y-180 duration-300">
-            <figure>
-              <img
-                className="h-full w-70 rounded-l-lg object-cover"
-                src={user.image.url}
-                alt="image"
-              />
-            </figure>
-            <div className="card-body rounded-r-lg ">
-              <h2 className="card-title text-2xl">{user.studentName}</h2>
-              <p>Roll No= {user.rollNo}</p>
-              <p>
-                Department= {user.department} {user.year}
-              </p>
-              <p className="text-[14px] font-bold">
-                Your attendance= {myPercent}%
-              </p>
-              {myPercent >= 90 && myPercent < 100 ? (
-                <p className="text-green-500">Excellent Attendee 🥇</p>
-              ) : myPercent >= 75 && myPercent < 90 ? (
-                <p className="text-blue-600">Good Attendee 🥈</p>
-              ) : (
-                <p className="text-red-600">⚠️ "Needs Improvement"</p>
-              )}
-              {myPercent >= 90 && myPercent < 100 ? (
-                <div className="border-green-500 border p-2 text-[11px] text-green-600 bg-green-300/50 rounded-md">
-                  🥇 Excellent! You have a great attendance record.
-                </div>
-              ) : myPercent >= 75 && myPercent < 90 ? (
-                <div className="border-blue-500 border p-2 text-[11px] text-blue-600 bg-blue-300/50 rounded-md">
-                  🥈 Good! You are maintaining required attendance.
-                </div>
-              ) : (
-                <div className="border-red-500 border p-2 text-[11px] text-red-600 bg-red-300/50 rounded-md">
-                  ⚠️ Your attendance is below 75%. You may not be eligible for
-                  exams.
-                </div>
-              )}
-            </div>
-          </div> */}
-         
-
-      <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5 ">
+      <div className="card card-side bg-base-100 shadow-[0_4px_10px_rgba(0,0,0,0.3)] md:h-70 md:w-160 mt-5">
             <figure>
               <img
                 className="h-full w-70 rounded-l-lg object-cover"
@@ -250,8 +204,8 @@ function Attendance() {
       {/* +++++++++++++++++++++++++++++ 3rd part ++++++++++++++++++++++++++++++++ */}
 
       <div>
-        <div className="md:h-20 h-10 w-full bg-gradient-to-r from-blue-600 to-rose-500 flex items-center justify-center mt-100 md:mt-0.5 ">
-          <h1 className="text-center text-2xl font-bold">
+        <div className="md:h-20 h-10 ml-8 md:ml-0 w-full bg-gradient-to-r from-blue-600 to-rose-500 flex items-center justify-center mt-100 md:mt-0.5 ">
+          <h1 className="text-center text-2xl font-bold ">
             <u>Detail view</u>
           </h1>
         </div>
@@ -281,7 +235,7 @@ function Attendance() {
                     {allStudent.map((student, index) => (
                       <tr
                         key={index}
-                        className="bg-gradient-to-l from-yellow-300 hover:bg-gray-300 text-[3vw] md:text-[1vw]"
+                        className="md:bg-gradient-to-l from-yellow-300 hover:bg-gray-300 text-[3vw] md:text-[1vw]"
                       >
                         <th>{index + 1}</th>
                         <td>{student.studentName}</td>

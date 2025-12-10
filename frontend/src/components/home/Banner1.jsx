@@ -1,5 +1,7 @@
 import React from "react";
 import { motion } from "motion/react"
+import { MdReportProblem } from "react-icons/md";
+import { MdLiveHelp } from "react-icons/md";
 
 function Banner1() {
   return (
@@ -39,8 +41,72 @@ function Banner1() {
             alt=""
           />
         </div>
-        
       </div>
+
+<div className="z-99 left-360 top-140 fixed">
+  <nav className="relative mb-10 group w-full h-40 flex items-center justify-center">
+
+    <a
+      href="#"
+      className="relative w-16 h-16 bg-[#f63b3b] text-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 transform group-hover:scale-110 z-50 hover:bg-[#2563eb]"
+    >
+      <svg
+        className="w-8 h-8 transition-transform duration-500 ease-in-out group-hover:rotate-45"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+    </a>
+
+    <div
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center z-40 transition-all duration-500"
+    >
+      {/* HELP BUTTON */}
+      <a
+        href="#"
+        className="absolute transform -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-translate-x-[150px] transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] delay-[50ms]"
+      >
+        <div
+          className="w-12 h-12 text-2xl bg-white rounded-full flex flex-col items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:bg-lime-400 hover:border-2"
+        >
+          <MdLiveHelp />
+        </div>
+        <span
+          className="text-xs font-bold text-gray-700 text-center mt-2 block opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"
+        >
+          Need Help
+        </span>
+      </a>
+
+      {/* REPORT BUTTON */}
+      <a
+        href="#"
+        className="absolute transform -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-translate-x-[75px] transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.27,1.55)] delay-[100ms]"
+      >
+        <div
+          className="w-12 h-12 text-2xl bg-white rounded-full flex flex-col items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:bg-amber-300 hover:border-2"
+        >
+          <MdReportProblem />
+        </div>
+        <span
+          className="text-xs font-bold text-gray-700 text-center mt-2 block opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300"
+        >
+          Report Problem
+        </span>
+      </a>
+    </div>
+  </nav>
+</div>
+
+
+      
     </>
   );
 }

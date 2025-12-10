@@ -1,214 +1,287 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import Navbar from '../home/Navbar';
+import { handleAxiosError } from '@/utils/handleAxiosError';
+import axios from 'axios';
+import { Loading2 } from '@/utils/Loading2';
+import toast from 'react-hot-toast';
 
 function Addstudent() {
-      
-  const [studentname, setStudentname] = useState("")
-  const [dob, setDob] = useState("")
-  const [image, setImage] = useState("") // Assuming you will handle image upload separately
-  const [regno, setRegno] = useState("")
-  const [gender, setGender] = useState("")
-  const [parentname, setParentname] = useState("")
-  const [parentphone, setParentphone] = useState("")
-  const [city, setCity] = useState("")
-  const [state, setState] = useState("")
-  const [country, setCountry] = useState("")
-  const [zipcode, setZipcode] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [department, setDepartment] = useState("")
-  const [year, setYear] = useState("")
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
+  const [studentname, setStudentname] = useState("");
+  const [dob, setDob] = useState("");
+  const [image, setImage] = useState("");
+  const [rollno, setRollno] = useState("");
+  const [gender, setGender] = useState("");
+  const [parentname, setParentname] = useState("");
+  const [parentphone, setParentphone] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [department, setDepartment] = useState("");
+  const [year, setYear] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const studentData = {
-      studentname,
-      dob,
-      image, // Note: You might need to handle image upload separately
-      regno,
-      gender,
-      parentname,
-      parentphone,
-      city,
-      state,
-      country,
-      zipcode,
-      email,
-      phone,
-      department,
-      year
+
+    const formData = new FormData();
+    formData.append("studentName", studentname);
+    formData.append("DOB", dob);
+    formData.append("rollNo", rollno);
+    formData.append("gender", gender);
+    formData.append("parentName", parentname);
+    formData.append("parentPhoneNo", parentphone);
+    formData.append("city", city);
+    formData.append("state", state);
+    formData.append("email", email);
+    formData.append("phoneNo", phone);
+    formData.append("department", department);
+    formData.append("year", year);
+    formData.append("image", image);
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/admin/addstudent",
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      toast.success(response.data.message);
+    } catch (error) {
+      handleAxiosError(error);
+    } finally {
+      setLoading(false);
     }
-    studentData && console.log("Student Data Submitted: ", studentData);
-    studentData && alert("Student Data Submitted");
-    setStudentname("");
-    setDob(""); 
-    setImage("");
-    setRegno("");
-    setGender("");
-    setParentname("");
-    setParentphone("");
-    setCity("");
-    setState("");
-    setCountry("");
-    setZipcode("");
-    setEmail("");
-    setPhone("");
-    setDepartment("");
-    setYear("");
-  }
+  };
+
   return (
-    <div className='bg-gradient-to-b from-amber-50 to-teal-100 h-full lg:h-screen '>
-  <form 
-  onSubmit={(e)=> {
-    handleSubmit(e);
-  }} 
-  className='px-5 md:px-15 '>
+    <>
+      <Navbar />
 
-    <div className='flex justify-center '>
-      <h3 className='text-xl md:text-2xl font-semibold md:font-bold pt-1 md:pt-3 mt-15'>Student Registration Form</h3>
-    </div>
+      {/* FULL SCREEN LOADER OVERLAY */}
+      {loading && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
+          <Loading2 />
+        </div>
+      )}
 
-    <h1 className='mt-2 md:mt-6 text-lg md:text-lg font-semibold text-gray-800'>Student Information</h1>
+      <div
+        className={`min-h-screen bg-gradient-to-br from-teal-100 to-indigo-100 flex items-center justify-center p-4
+        ${loading ? "pointer-events-none opacity-60" : ""}`}
+      >
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white w-full max-w-6xl rounded-3xl shadow-xl p-6 md:p-10"
+        >
+          <h2 className="text-center text-3xl font-bold text-teal-600 mb-6">
+            Student Registration Form
+          </h2>
 
-    <div className='flex md:flex-row flex-col justify-between  mt-1 md:mt-2 w-full'>
-      <input type="text" placeholder='Full Name' 
-      required
-      value={studentname}
-      onChange={(e) => setStudentname(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:mt-2 md:mb-0 mb-3'/>
-      <input type="date" placeholder='Date of Birth' 
-      required
-      value={dob}
-      onChange={(e) => setDob(e.target.value)}
-      className='bg-gradient-to-r from-white to-teal-200 border outline-none border-gray-300 text-gray-800 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:mt-2 md:ml-3 md:mb-0 mb-3 block '/>
-      <input type="file" placeholder='image' 
-      required
-      onChange={(e) => setImage(e.target.files[0])}
-      className="file-input file-input-accent  bg-white md:mx-3 mb-3 w-full md:w-1/4 md:mt-2 md:mb-0 p-1 md:p-0 "/>
-      <input type="text" placeholder='Registration/Roll No.' 
-      required
-      value={regno}
-      onChange={(e) => setRegno(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:ml-3 md:mt-2 md:mb-0 mb-3 '/>
-      <select name="gender" placeholder="Gender" 
-      required
-      value={gender}
-      onChange={(e) => setGender(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 py-1 w-1/3 md:w-1/10 rounded-md md:ml-3 md:mt-2'>
-        <option value="">Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-      </select>
-    </div>
+          {/* STUDENT INFORMATION */}
+          <h3 className="text-xl font-semibold mb-4 text-gray-700 border-b pb-1">
+            📘 Student Information
+          </h3>
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg font-semibold text-gray-800'>Parent Information</h1>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input
+              type="text"
+              placeholder="Full Name"
+              required
+              value={studentname}
+              onChange={(e) => setStudentname(e.target.value)}
+              className="input-style"
+            />
 
-    <div className='flex justify-between w-full'>
-      <input type="text" placeholder='Father/Mother Name' 
-      required
-      value={parentname}
-      onChange={(e) => setParentname(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 mr-3 '/>
-      <input type="number" placeholder='Parent Phone Number' 
-      minLength={10} 
-      required
-      value={parentphone}
-      onChange={(e) => setParentphone(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 md:ml-3'/>
-    </div>
-    
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg font-semibold text-gray-800'>Address</h1>
+            <input
+              type="date"
+              required
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              className="input-style"
+            />
 
-    <div className='flex flex-col md:flex-row justify-between mt-2 w-full'>
-      <input type="text" placeholder='Village/City' 
-      required
-      value={city}
-      onChange={(e) => setCity(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-full md:w-1/2 py-1 px-4 rounded-md md:mb-0 mb-3 md:mt-2 mr-3'/>
-      <input type="text" placeholder='State' 
-      required
-      value={state}
-      onChange={(e) => setState(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-full md:w-1/2 py-1 px-4 rounded-md  md:mt-2 md:ml-3'/>
-    </div>
+            <input
+              type="text"
+              placeholder="Roll No."
+              required
+              value={rollno}
+              onChange={(e) => setRollno(e.target.value)}
+              className="input-style"
+            />
 
-    {/* <div className='flex justify-between mt-2 w-full'>
-      <input type="text" placeholder='Country' 
-      required
-      value={country}
-      onChange={(e) => setCountry(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 mr-3 '/>
-      <input type="number" placeholder='Zip Code' 
-      required
-      value={zipcode}
-      onChange={(e) => setZipcode(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 md:ml-3 '/>
-    </div> */}
+            <input
+              type="file"
+              required
+              onChange={(e) => setImage(e.target.files[0])}
+              className="file-style md:col-span-2"
+            />
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg font-semibold text-gray-800'>Contact Information</h1>
+            <select
+              required
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="input-style"
+            >
+              <option value="">Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
 
-    <div className='flex justify-between w-full'>
-      <input type="email" placeholder='Email' 
-      minLength={10}
-      required
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 mr-3 '/>
-      <input type="number" placeholder='Phone Number' 
-      required
-      value={phone}
-      onChange={(e) => setPhone(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 ml-3 '/>
-    </div>
+          {/* PARENT INFORMATION */}
+          <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-700 border-b pb-1">
+            👨‍👩‍👧 Parent Information
+          </h3>
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg font-semibold text-gray-800'>Department Information</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="Father / Mother Name"
+              required
+              value={parentname}
+              onChange={(e) => setParentname(e.target.value)}
+              className="input-style"
+            />
 
-     <div className='flex md:flex-row flex-col justify-between w-full'>
+            <input
+              type="number"
+              placeholder="Parent Phone Number"
+              required
+              value={parentphone}
+              onChange={(e) => setParentphone(e.target.value)}
+              className="input-style"
+            />
+          </div>
 
-    <div className='w-full md:w-1/5'>
-      <div className='flex  '>
-      <label htmlFor="department" className='flex pt-2 md:pt-3'>Department</label>
-      <select name="department" id='department'
-        required
-       value={department}
-        onChange={(e) => setDepartment(e.target.value)} 
-       className='bg-gray-50 border outline-none border-gray-300 w-full mt-2 md:mt-3 py-1 px-4 rounded-md ml-3 '>
-        <option value={""}>Department</option>
-        <option>BCA</option>
-        <option>BBA</option>
-        <option>BBT</option>
-        <option value="BTECH">BTECH</option>
-      </select>
-    </div>
+          {/* ADDRESS */}
+          <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-700 border-b pb-1">
+            🏠 Address
+          </h3>
 
-    <div className='flex '>
-      <label htmlFor="Year" className='flex pt-2 md:pt-3'>Year</label>
-      <select name="Year" id='Year' 
-      required
-      value={year}
-      onChange={(e) => setYear(e.target.value)}
-      className='bg-gray-50 border outline-none border-gray-300 w-full mt-2 md:mt-3 py-1 px-4 rounded-md ml-8 '>
-        <option value={""}>Year</option>
-        <option value={1}>1st Year</option>
-        <option value={2}>2st Year</option>
-        <option value={3}>3st Year</option>
-        {department === "BTECH" && (
-          <option value={4}>4th Year</option>
-        )}
-      </select>
-    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="City / Village"
+              required
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="input-style"
+            />
 
-   </div>
+            <input
+              type="text"
+              placeholder="State"
+              required
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              className="input-style"
+            />
+          </div>
 
-    <div className='flex justify-center items-end mt-5 md:ml-3 w-full md:w-[10%]'>
-      <button className='border px-4 py-1.5 rounded-lg cursor-pointer bg-gradient-to-br from-teal-400 to-[#5fb4f0] text-white text-lg font-semibold md:font-bold md:mb-0 mb-1 w-full' >Add Student</button>
-    </div>
+          {/* CONTACT INFORMATION */}
+          <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-700 border-b pb-1">
+            📞 Contact Information
+          </h3>
 
-     </div>
-     
-  </form>
-    </div>
-  )
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+              type="email"
+              placeholder="Email Address"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-style"
+            />
+
+            <input
+              type="number"
+              placeholder="Student Phone Number"
+              required
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="input-style"
+            />
+          </div>
+
+          {/* DEPARTMENT INFO */}
+          <h3 className="text-xl font-semibold mt-8 mb-4 text-gray-700 border-b pb-1">
+            🎓 Department Information
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <select
+              required
+              defaultValue="Select Department"
+              onChange={(e) => setDepartment(e.target.value)}
+              className="input-style"
+            >
+              <option disabled>Select Department</option>
+              <option>+2-Science</option>
+              <option>+3-Science</option>
+              <option>BCA</option>
+              <option>BBA</option>
+              <option>BBT</option>
+              <option>B-Tech</option>
+              <option>MBA</option>
+              <option>MCA</option>
+            </select>
+
+            <select
+              required
+              defaultValue="Select Year"
+              onChange={(e) => setYear(e.target.value)}
+              className="input-style"
+            >
+              <option disabled>Select Year</option>
+
+              {department === '+2-Science' ||
+              department === 'MBA' ||
+              department === 'MCA' ? (
+                <>
+                  <option value="1st yr">1st year</option>
+                  <option value="2nd yr">2nd year</option>
+                </>
+              ) : department === 'BCA' ||
+                department === 'BBA' ||
+                department === 'BBT' ||
+                department === '+3-Science' ? (
+                <>
+                  <option value="1st yr">1st year</option>
+                  <option value="2nd yr">2nd year</option>
+                  <option value="3rd yr">3rd year</option>
+                </>
+              ) : department === 'B-Tech' ? (
+                <>
+                  <option value="1st yr">1st year</option>
+                  <option value="2nd yr">2nd year</option>
+                  <option value="3rd yr">3rd year</option>
+                  <option value="4th yr">4th year</option>
+                </>
+              ) : null}
+            </select>
+          </div>
+
+          {/* SUBMIT BUTTON */}
+          <div className="flex justify-center mt-10">
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-10 py-3 bg-gradient-to-r from-teal-500 to-indigo-500 text-white font-bold rounded-xl shadow-md hover:scale-105 transition duration-300 disabled:opacity-50"
+            >
+              Add Student
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
+  );
 }
 
-export default Addstudent
+export default Addstudent;

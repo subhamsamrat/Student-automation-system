@@ -12,6 +12,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+:root {
+  color: rgb(0 0 0 / 1);
+  background-color: white;
+}
+
+.input-style {
+  @apply bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-teal-400 transition;
+}
+
+.file-style {
+  @apply bg-gray-100 border border-gray-300 rounded-lg p-2 cursor-pointer;
+}
 
 
 body{

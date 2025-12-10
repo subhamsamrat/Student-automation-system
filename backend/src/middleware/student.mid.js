@@ -2,21 +2,14 @@ import jwt from 'jsonwebtoken';
 import config from '../../config.js';
 
 export default function studentMiddleware(req,res,next){
- //const authHeader=req.headers.authorization;
  try {
    const token=req.cookies.jwt;  
-    console.log('tokemnm=',req.cookies.jwt);
     
    if(!token){
         console.log('No token provided');
         return res.status(401).json({error:'Unauthorize !! Pleas Login First'});
    } 
 
-   //  if(!authHeader || !authHeader.startsWith('Bearer')){
-   //      console.log('No token provided unauthorize');
-   //             return res.status(401).json({error:'No token provided unauthorize'});
-   //  }
-       //const token=authHeader.split(" ")[1];
        const decoded=jwt.verify(token,config.JWT_USER_SECRET);
        req.studentId=decoded.id;
        next();

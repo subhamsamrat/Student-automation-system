@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import toast from 'react-hot-toast';
+import { handleAxiosError } from "@/utils/handleAxiosError";
 
 function Login() {
   const {
@@ -58,17 +60,18 @@ function Login() {
           );
         }
       } else {
-        alert("pleas select role !!");
+        toast.error("pleas select role !!");
       }
 
-      alert(response.data.message);
+      toast.success(response.data.message);
       document.getElementById("login_modal").close();
-       window.location.reload();
+      setTimeout(()=>{
+         window.location.reload();
+      },1000);
+      
     } catch (error) {
-      console.log("ERROR !! in login.jsx", error);
-      alert(
-        error.data?.error || "Something went wrong. Please try again later."
-      );
+      console.log("ERROR !! in login.jsx", error)
+      handleAxiosError(error);
     }
   };
 

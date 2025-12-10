@@ -3,7 +3,6 @@ import config from "../../config.js";
 
 export default function adminMiddleware(req, res, next) {
   const cookieToken = req.cookies.jwt;
-   console.log(cookieToken);
    
   if (!cookieToken) {
     console.log("ERROR !! no token unauthorize,Pleas Login first");

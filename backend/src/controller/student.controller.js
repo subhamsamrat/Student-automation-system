@@ -1,24 +1,35 @@
-import studentSchema from "../models/student.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../../config.js";
 import signupSchema from "../models/stdSignup.model.js";
 import { AttendanceSchema } from "../models/takeAttendance.model.js";
-import { resultSchema } from "../models/addResult.model.js";  
+import { resultSchema } from "../models/addResult.model.js";
 import { paymentSchema } from "../models/payment.model.js";
+import StudentSchema from "../models/student.model.js";
 
 //view student
 export const students = async (req, res) => {
-  try {
-    const data = await studentSchema.find();
+   const { department, year } = req.query;
 
-    if (!data) {
-      console.log("No data found");
-      res.status(404).json("student data not found");
-    } else {
-      console.log("data fetch succesfully");
-      res.status(200).json(data);
+  try {
+     if (!department || !year) {
+      console.log(
+        "❌ERROR !! in adminViewAllStudents controller: Missing required query parameters"
+      );
+      return res
+        .status(400)
+        .json({ error: "department and year are required" });
     }
+  
+    const students = await StudentSchema.find({ department, year });
+    console.log("Students found:", students);
+    if (students.length === 0) {
+      console.log("❌ERROR !! No students found");
+      return res.status(404).json({ error: "No students found" });
+    }
+    console.log("Students retrieved successfully ✅", students);
+    res.status(200).json({ students });
+   
   } catch (error) {
     console.log("ERROR !! in student controller:", error);
     res.status(500).json("internal server error", error);
@@ -34,7 +45,7 @@ export const studentSignup = async (req, res) => {
       return res.status(404).json({ error: "required data not found" });
     }
 
-    const isExist1 = await studentSchema.findOne({ email });
+    const isExist1 = await StudentSchema.findOne({ email });
     if (isExist1) {
       const isExist2 = await signupSchema.findOne({ email });
       if (isExist2) {
@@ -54,17 +65,13 @@ export const studentSignup = async (req, res) => {
       }
 
       const hasePassword = await bcrypt.hash(password, 10);
-      console.log("hashed");
 
       const newStd = new signupSchema({
         email,
         password: hasePassword,
       });
-      console.log("data wraped");
 
-      const response = await newStd.save();
-      console.log("response:", response);
-
+      await newStd.save();
       console.log("Signup succesfully");
       return res.status(200).json({ message: "signup successfully" });
     } else {
@@ -86,7 +93,7 @@ export const studentLogin = async (req, res) => {
       return res.status(404).json({ error: "pleas provid email and password" });
     }
 
-    const user = await studentSchema.findOne({ email });
+    const user = await StudentSchema.findOne({ email });
     if (user) {
       const isExist = await signupSchema.findOne({ email });
       if (!isExist) {
@@ -133,10 +140,10 @@ export const studentLogin = async (req, res) => {
 export const attendance = async (req, res) => {
   try {
     const studentId = req.studentId;
-    const user = await studentSchema.findById(studentId);
+    const user = await StudentSchema.findById(studentId);
 
     // Fetch all students of same dept/year
-    const allStudents = await studentSchema.find({
+    const allStudents = await StudentSchema.find({
       year: user.year,
       department: user.department,
     });
@@ -148,12 +155,22 @@ export const attendance = async (req, res) => {
     });
 
     const months = [
-      "january","february","march","april","may","june",
-      "july","august","september","october","november","december"
+      "january",
+      "february",
+      "march",
+      "april",
+      "may",
+      "june",
+      "july",
+      "august",
+      "september",
+      "october",
+      "november",
+      "december",
     ];
 
     // 1) Logged-in student stats
-    const myStats = months.map(m => ({ name: m, present: 0, absent: 0 }));
+    const myStats = months.map((m) => ({ name: m, present: 0, absent: 0 }));
 
     response.forEach((record) => {
       const month = record.date.getMonth();
@@ -193,8 +210,8 @@ export const attendance = async (req, res) => {
       allStudentsStats.push({
         rollNo: student.rollNo,
         studentName: student.studentName,
-        image: student.image.url,      
-        percentage: percentage.toFixed(2)
+        image: student.image.url,
+        percentage: percentage.toFixed(2),
       });
     }
 
@@ -202,20 +219,19 @@ export const attendance = async (req, res) => {
     const top3 = [...allStudentsStats]
       .sort((a, b) => b.percentage - a.percentage)
       .slice(0, 3)
-      .map(s => ({
+      .map((s) => ({
         studentName: s.studentName,
         image: s.image,
         percentage: s.percentage,
-      })); 
+      }));
 
     // Final response
     return res.status(200).json({
       message: "Data processed successfully",
-      myStats,          // logged-in student monthly stats 
+      myStats, // logged-in student monthly stats
       allStudentsStats, // yearly percentage of each student
       top3Students: top3, // highest 3 students with name + image
     });
-
   } catch (error) {
     console.log("ERROR !! in student attendance", error);
     res.status(500).json({ error: "internal server error" });
@@ -223,58 +239,141 @@ export const attendance = async (req, res) => {
 };
 
 //student result
-export const result= async(req,res)=>{
-    const studentId=req.studentId;
-      try {
-        const allresults=await resultSchema.find();   
-        const student=await studentSchema.findById(studentId);
+export const result = async (req, res) => {
+  const studentId = req.studentId;
+  try {
+    const allresults = await resultSchema.find();
+    const students = await StudentSchema.find();
 
-        if(!student){
-          console.log('ERROR !! in student result controller student not found');
-          return res.status(404).json({error:'student not found'});
+    const loginStudent = students.find((e) => {
+      return e._id.equals(studentId);
+    });
+
+    //login students department and year all std
+    const allStudents = students.filter((e) => {
+      if (e.department === loginStudent.department) {
+        if (e.year === loginStudent.year) {
+          return e;
         }
-      const stdresult=allresults.filter((e)=> e.department===student.department && e.year===student.year);
-        if(!stdresult || stdresult.length===0 || stdresult===null){
-          console.log('ERROR !! in student result controller no result found');
-          return res.status(404).json({error:'No result published'});
-        }
-
-         const latestResult = allresults.reduce((latest, current) => {
-  return new Date(current.examDate) > new Date(latest.examDate) ? current : latest;
-});
-
-    const top10Std=latestResult.stdResult.sort((a,b)=>b.mark-a.mark)
-      console.log(top10Std.slice(0,9));
-      
-               
-
-        return res.status(200).json({message:'result fetch successfully',stdresult});
-      } catch (error) {
-        console.log("ERROR !! in student result controller:",error);
-        return res.status(500).json({error:'internal server error'});
       }
+    });
+
+    if (!loginStudent) {
+      console.log("ERROR !! in student result controller student not found");
+      return res.status(404).json({ error: "student not found" });
+    }
+    //filter login student dept yera exams and results
+    const stdresult = allresults.filter(
+      (e) =>
+        e.department === loginStudent.department && e.year === loginStudent.year
+    );
+    if (!stdresult || stdresult.length === 0 || stdresult === null) {
+      console.log("ERROR !! in student result controller no result found");
+      return res.status(404).json({ error: "No result published" });
+    }
+    //last exam
+    const latestResult = stdresult.reduce((latest, current) => {
+      return new Date(current.ExamDate) > new Date(latest.ExamDate)
+        ? current
+        : latest;
+    });
+
+    //top 10 students
+    const sortedStd = latestResult.stdResult.sort((a, b) => b.mark - a.mark);
+    const top10StdMark = sortedStd.slice(0, 9);
+
+    const top10StdDetail =[];
+    //merge top10 std mark with student details
+      for (let x = 0; x < top10StdMark.length; x++) {
+                     for (let y = 0; y < allStudents.length; y++) {
+                       if(top10StdMark[x].stdId.toString()===allStudents[y]._id.toString()){
+                         top10StdDetail.push({
+                           stdId:top10StdMark[x].stdId,
+                           mark:top10StdMark[x].mark/latestResult.fullMark*100,
+                           studentName:allStudents[y].studentName,
+                           rollNo:allStudents[y].rollNo,
+                           image:allStudents[y].image.url
+                         });
+                       } 
+                     }       
+        
+      }
+    
+    //login Std mark
+    const logStdMark = latestResult.stdResult.find(
+      (e) => studentId === e.stdId
+    );
+
+    //login std rank
+    let totStd = 0,
+      rank = 0;
+    sortedStd.forEach((e) => {
+      totStd += 1;
+      if (e.stdId === studentId) {
+        rank = totStd;
+        return totStd;
+      }
+    });
+
+    //PI chart data
+    const piData = ["Fail", "Pass"].map((e) => ({ name: e, value: 0 }));
+    latestResult.stdResult.map((e) => {
+      if (Math.floor((e.mark / latestResult.fullMark) * 100) >= 30) {
+        piData[0].value += 1;
+      } else {
+        piData[1].value += 1;
+      }
+    });
+
+    //login std result card info
+    const loginStdInfo = {
+      examName: latestResult.examName,
+      examDate: latestResult.ExamDate,
+      fullMark: latestResult.fullMark,
+      stdName: loginStudent.studentName,
+      stdRollNo: loginStudent.rollNo,
+      curedMark: logStdMark.mark,
+      percentage: (logStdMark.mark / latestResult.fullMark) * 100,
+      totStd,
+      rank,
+    };
+
+    return res.status(200).json({
+      message: "result fetch successfully",
+      exams: stdresult,
+      top10StdMark:top10StdDetail,
+      loginStdInfo,
+      piData,
+    });
+  } catch (error) {
+    console.log("ERROR !! in student result controller:", error);
+    return res.status(500).json({ error: "internal server error" });
+  }
 };
 
-//student account 
-export const account=async (req,res)=>{
-   const studentId=req.studentId;
-   try {
+//student account
+export const account = async (req, res) => {
+  const studentId = req.studentId;
+  try {
     //get login student data
-    const student=await studentSchema.findById(studentId);
-    if(!student || student===null){
-      console.log('ERROR !! in student controller student not found');
-      return res.status(404).json({error:'student not found'});
+    const student = await StudentSchema.findById(studentId);
+    if (!student || student === null) {
+      console.log("ERROR !! in student controller student not found");
+      return res.status(404).json({ error: "student not found" });
     }
     //get payment data
-    const paymentData=await paymentSchema.find({stdId:studentId});
-    if(!paymentData){
-      console.log('No payment initiate');
-      return res.status(404).json({message:'No payment initiate'})
+    const paymentData = await paymentSchema.find({ stdId: studentId });
+    
+    if (!paymentData || paymentData.length===0) {
+      console.log("No payment initiate");
+      return res.status(404).json({ error: "No payment initiate" });
     }
-       console.log('payment data fetch successfully',paymentData);
-    return res.status(200).json({message:'payment data fetch successfully',paymentData})
-   } catch (error) {
-    console.log('ERROR !! in student account controller');
-    return res.status(500).json({error:'internal server error'});
-   }
+    console.log("payment data fetch successfully", paymentData);
+    return res
+      .status(200)
+      .json({ message: "payment data fetch successfully",PaymentData:paymentData[0]});
+  } catch (error) {
+    console.log("ERROR !! in student account controller");
+    return res.status(500).json({ error: "internal server error" });
+  }
 };

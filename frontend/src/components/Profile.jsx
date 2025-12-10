@@ -13,10 +13,10 @@ const user=useContext(authContext);
       <button
         onClick={() => document.getElementById('profile_modal').close()}
       className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-       <div className="menu bg-base-200 text-base-content min-h-full w-[30vw] p-3 ">
+       <div className="menu bg-base-200 text-base-content md:min-h-full md:w-[30vw] p-3 ">
       {/* Sidebar content here */}
-      <div className='flex items-center gap-5 bg-gradient-to-t to-blue-700 p-3 rounded-lg shadow-xl'>
-        <img src={user.image.url} alt="" className='h-35 w-35  rounded-full object-cover shadow-2xl'/>
+      <div className='flex md:flex-row flex-col items-center gap-5 bg-gradient-to-t to-blue-700 p-3 rounded-lg shadow-xl'>
+        <img src={user.image.url} alt="" className='md:h-35 md:w-35 h-60 w-50 rounded-full object-cover shadow-2xl'/>
         <h2 className="text-2xl font-bold">{user.studentName} </h2>
       </div>
       <section className=''>

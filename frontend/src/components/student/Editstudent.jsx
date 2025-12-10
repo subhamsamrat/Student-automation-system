@@ -1,254 +1,252 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import studentinfo from "../../assets/studentInfo.json"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+import toast from "react-hot-toast";
 
-function Editstudent({id, onClose}) {
-      
-  //const {id} = useParams()
-  const [loading, setLoading] = useState("")
-  const [students, setStudents] = useState("")
-  
-  const [studentname, setStudentname] = useState("")
-  const [dob, setDob] = useState("")
-  const [image, setImage] = useState("") // Assuming you will handle image upload separately
-  const [regno, setRegno] = useState("")
-  const [parentname, setParentname] = useState("")
-  const [parentphone, setParentphone] = useState("")
-  const [city, setCity] = useState("")
-  const [state, setState] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [department, setDepartment] = useState("")
-  const [year, setYear] = useState("")
+export default function Editstudent({ open, onClose, data }) {
+  const [loading, setLoading] = useState(false);
 
+  const [studentname, setStudentname] = useState("");
+  const [dob, setDob] = useState("");
+  const [image, setImage] = useState("");
+  const [regno, setRegno] = useState("");
+  const [parentname, setParentname] = useState("");
+  const [parentphone, setParentphone] = useState("");
+  const [city, setCity] = useState("");
+  const [stateValue, setStateValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [department, setDepartment] = useState("");
+  const [year, setYear] = useState("");
 
   useEffect(() => {
-    const fetchStudents = () => {
-      setLoading(true)
-      try {
-        
-        const responnse = studentinfo;
-       
-        
-        if(responnse){
-          const std=responnse.find(student => {return student.rollNo == id})
-           console.log("std=",std);
-          setStudents(std)
-          setStudentname(std.fullName); 
-          setDob(std.dob); 
-          setImage(std.photo);
-          setRegno(std.rollNo);
-          setParentname(std.parentName);
-          setParentphone(std.parentPhoneNumber);
-          setCity(std.city);
-          setState(std.state);
-          setEmail(std.email);
-          setPhone(std.phoneNumber);
-          setDepartment(std.department);
-          setYear(std.year);
-        }
-      } catch (error) {
-        //  if(!responnse){
-        //       alert(error)
-        //     }
-        console.log("ERROR !! in edit student:",error);
-      }
-      finally{
-              setLoading(false)
-            }
-    }
-    fetchStudents()
-  },[])
+    if (!open || !data) return;
 
-  // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const studentData = {
-      studentname,
-      dob,
-      image, // Note: You might need to handle image upload separately
-      regno,
-      parentname,
-      parentphone,
-      city,
-      state,
-      email,
-      phone,
-      department,
-      year,
+    setLoading(true);
+
+    try {
+      setStudentname(data.studentName || data.fullName || "");
+      setDob(
+        data.DOB
+          ? typeof data.DOB === "string"
+            ? data.DOB.substring(0, 10)
+            : new Date(data.DOB).toISOString().substring(0, 10)
+          : ""
+      );
+      setImage(data.image?.url || "");
+      setRegno(data.rollNo || data.regno || "");
+      setParentname(data.parentName || "");
+      setParentphone(data.parentPhoneNo || "");
+      setCity(data.city || "");
+      setStateValue(data.state || "");
+      setEmail(data.email || "");
+      setPhone(data.phoneNo || "");
+      setDepartment(data.department || "");
+      setYear(data.year || "");
+
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-    studentData && console.log("Student Data Submitted: ", studentData);
-    studentData && alert("Student Data updatted");
-    setStudentname("");
-    setDob(""); 
-    setImage("");
-    setRegno("");
-    setParentname("");
-    setParentphone("");
-    setCity("");
-    setState("");
-    setEmail("");
-    setPhone("");
-    setDepartment("");
-    setYear("");
-  }
+  }, [open, data]);
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("studentName", studentname);
+    formData.append("DOB", dob);
+    formData.append("rollNo", regno);
+    formData.append("parentName", parentname);
+    formData.append("parentPhoneNo", parentphone);
+    formData.append("city", city);
+    formData.append("state", stateValue);
+    formData.append("email", email);
+    formData.append("phoneNo", phone);
+    formData.append("department", department);
+    formData.append("year", year);
+
+    if (image instanceof File) {
+      formData.append("image", image);
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/api/v1/admin/updatestudent/${data._id}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      toast.success(response.data.message);
+      onClose();
+
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
+
+  if (!open) return null;
 
   return (
-    <div className='z-1 inset-0 fixed  backdrop-opacity-100 backdrop-blur-lg flex justify-center items-center '>
+    <div className="fixed inset-0 z-999 flex items-center justify-center p-4">
 
-  <div className='h-full md:pt-3 py-5 bg-blue-50 w-[75%]'>
-         
-     {
-     loading ? (
-      <p>Loading.....</p>
-    ) : (
-       <form 
-  onSubmit={(e)=> {
-    handleSubmit(e);
-  }} 
-  className=' px-5 md:px-10 bg-gradient-to-b from-amber-50 to-teal-100 h-full shadow-lg rounded-lg mt-7 md:mt-13 overflow-y-scroll'>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+           onClick={onClose}></div>
 
-    <div className='flex justify-center items-center'>
-     <div>
-          <button 
-        onClick={onClose}
-        className=' cursor-pointer text-xl font-extrabold text-black rounded-full 
-         hover:text-blue-700'>
-          <FontAwesomeIcon icon={faArrowLeft} /></button>
-    </div>
-     <div className='text-center w-full'>
-           <h3 className='text-xl md:text-2xl font-semibold md:font-medium pt-1 md:pt-3'>Edit Student Information</h3>
-     </div>
-    </div>
+      {/* Modal */}
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-4xl p-6 max-h-[90vh] overflow-y-auto">
 
-    <h1 className='mt-2 md:mt-6 text-lg md:text-lg'>Student Information</h1>
+        {/* Close */}
+        <button
+          className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+          onClick={onClose}
+        >
+          ✕
+        </button>
 
-    <div className='flex md:flex-row flex-col justify-between mt-2 w-full'>
-      <input type="text" placeholder='Full Name' 
-      required
-      value={studentname}
-      onChange={(e) => setStudentname(e.target.value)}
-      className='bg-gray-50 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:mt-2 md:mb-0 mb-3 '/>
-      <input type="date" placeholder='Date of Birth' 
-      required
-      value={dob}
-      onChange={(e) => setDob(e.target.value)}
-      className='bg-gray-50 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:mt-2 md:ml-3 md:mb-0 mb-3'/>
-      <input type="file" placeholder='image' 
-      required
-      accept='image/*'
-      onChange={(e) => setImage(e.target.files[0])}
-      className="file-input file-input-accent bg-gray-50 md:mx-3 mb-3  md:mt-2 md:mb-0 p-1 md:p-0" />
-      <input type="text" placeholder='Registration No.' 
-      required
-      value={regno}
-      onChange={(e) => setRegno(e.target.value)}
-      className='bg-gray-50 w-full md:w-1/3 py-1 px-4 rounded-md mr-3 md:mt-2 md:ml-3 md:mb-0 '/>
-    </div>
+        <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">
+          Edit Student Details
+        </h2>
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg'>Parent Information</h1>
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          <form className="space-y-10" onSubmit={handleSubmit}>
 
-    <div className='flex justify-between w-full'>
-      <input type="text" placeholder='Father/Mother Name' 
-      required
-      value={parentname}
-      onChange={(e) => setParentname(e.target.value)}
-      className='bg-gray-50 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 mr-3 '/>
-      <input type="number" placeholder='Parent Phone Number' 
-      minLength={10} 
-      required
-      value={parentphone}
-      onChange={(e) => setParentphone(e.target.value)}
-      className='bg-gray-50 w-1/2 py-1 px-4 rounded-md mt-1 md:mt-2 md:ml-3'/>
-    </div>
-    
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg'>Address</h1>
+            {/* Student Info */}
+            <div className="p-5 rounded-xl bg-gray-50 shadow">
+              <h3 className="text-xl font-semibold mb-4">Student Information</h3>
 
-    <div className='flex md:flex-row flex-col justify-between mt-2 w-full'>
-      <input type="text" placeholder='City' 
-      required
-      value={city}
-      onChange={(e) => setCity(e.target.value)}
-      className='bg-gray-50 w-full md:w-1/2 py-1 px-4 rounded-md mb-3 md:mt-2 mr-3'/>
-      <input type="text" placeholder='State' 
-      required
-      value={state}
-      onChange={(e) => setState(e.target.value)}
-      className='bg-gray-50 w-full md:w-1/2 py-1 px-4 rounded-md  md:mt-2 md:ml-3'/>
-    </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                <input
+                  className="input input-bordered"
+                  value={studentname}
+                  onChange={(e) => setStudentname(e.target.value)}
+                />
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg'>Contact Information</h1>
+                <input
+                  type="date"
+                  className="input input-bordered"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
 
-    <div className='flex justify-between w-full'>
-      <input type="email" placeholder='Email' 
-      minLength={10}
-      required
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      className='bg-gray-50 w-1/2 py-1 px-4 rounded-md mt-2  mr-3 '/>
-      <input type="number" placeholder='Phone Number' 
-      required
-      value={phone}
-      onChange={(e) => setPhone(e.target.value)}
-      className='bg-gray-50 w-1/2 py-1 px-4 rounded-md mt-2  ml-3'/>
-    </div>
+                <input
+                  type="file"
+                  className="file-input file-input-bordered"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
 
-    <h1 className='mt-3 md:mt-7 text-lg md:text-lg'>Department Information</h1>
+                <input
+                  className="input input-bordered col-span-3 md:col-span-1"
+                  value={regno}
+                  onChange={(e) => setRegno(e.target.value)}
+                />
+              </div>
+            </div>
 
-     <div className='flex md:flex-row flex-col justify-between w-full pb-3'>
+            {/* Parent Info */}
+            <div className="p-5 rounded-xl bg-gray-50 shadow">
+              <h3 className="text-xl font-semibold mb-4">Parent Information</h3>
 
-    <div className='w-full md:w-1/5'>
-      <div className='flex mb-1 '>
-      <label htmlFor="department" className='flex pt-2 md:pt-3'>Department</label>
-      <select name="department" id='department'
-        required
-       value={department}
-        onChange={(e) => setDepartment(e.target.value)} 
-       className='bg-gray-50 w-full mt-2 md:mt-2 py-1 px-4 rounded-md ml-3 '>
-        <option value={""}>Department</option>
-        <option>BCA</option>
-        <option>BBA</option>
-        <option>BBT</option>
-        <option value="BTECH">BTECH</option>
-      </select>
-    </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <input
+                  className="input input-bordered"
+                  value={parentname}
+                  onChange={(e) => setParentname(e.target.value)}
+                />
 
-    <div className='flex '>
-      <label htmlFor="Year" className='flex pt-2 md:pt-3'>Year</label>
-      <select name="Year" id='Year' 
-      required
-      value={year}
-      onChange={(e) => setYear(e.target.value)}
-      className='bg-gray-50 w-full mt-2 md:mt-2 py-1 px-4 rounded-md ml-8 '>
-        <option value={""}>Year</option>
-        <option value={1}>1st Year</option>
-        <option value={2}>2st Year</option>
-        <option value={3}>3st Year</option>
-        {department === "BTECH" && (
-          <option value={4}>4th Year</option>
+                <input
+                  className="input input-bordered"
+                  value={parentphone}
+                  onChange={(e) => setParentphone(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="p-5 rounded-xl bg-gray-50 shadow">
+              <h3 className="text-xl font-semibold mb-4">Address</h3>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <input
+                  className="input input-bordered"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <input
+                  className="input input-bordered"
+                  value={stateValue}
+                  onChange={(e) => setStateValue(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Contact */}
+            <div className="p-5 rounded-xl bg-gray-50 shadow">
+              <h3 className="text-xl font-semibold mb-4">Contact</h3>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <input
+                  className="input input-bordered"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  className="input input-bordered"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Department */}
+            <div className="p-5 rounded-xl bg-gray-50 shadow">
+              <h3 className="text-xl font-semibold mb-4">Department</h3>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <select
+                  className="input input-bordered"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                >
+                  <option>+2-Science</option>
+                  <option>+3-Science</option>
+                  <option>BCA</option>
+                  <option>BBA</option>
+                  <option>BBT</option>
+                  <option>B-Tech</option>
+                  <option>MBA</option>
+                  <option>MCA</option>
+                </select>
+
+                <select
+                  className="input input-bordered"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                >
+                  <option>1st yr</option>
+                  <option>2nd yr</option>
+                  <option>3rd yr</option>
+                  <option>4th yr</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-center">
+              <button className="px-10 py-3 bg-indigo-600 text-white rounded-xl hover:scale-105 transition">
+                Update
+              </button>
+            </div>
+
+          </form>
         )}
-      </select>
+      </div>
     </div>
-
-   </div>
-
-     <div className='flex justify-center items-end mt-5 md:ml-3 w-full md:w-[15%]'>
-      <button className='border px-4 py-1.5 rounded-lg cursor-pointer bg-teal-600 text-white text-lg font-semibold md:font-bold w-full mb-2' >Edit Student</button>
-    </div>
-
-     </div>
-     
-  </form>
-    )
-   }
-
-  </div>
-
-   </div>
-  )
+  );
 }
-
-export default Editstudent
-
