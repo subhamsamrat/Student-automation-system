@@ -1,5 +1,5 @@
 import { useState,useContext } from 'react'
-import Home from './components/home/home'
+import Home from './components/home/Home.jsx'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Signup from './components/Signup'
 import Login from './components/Login'
