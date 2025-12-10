@@ -115,11 +115,10 @@ export const studentLogin = async (req, res) => {
 
         const cookieOptions = {
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000), //1d
-          httpOnly: true, // its true for secure purpose because(this cookie can't accesable directly thgrow js)
-          secure: process.env.NODE_ENV === "production", //true for http only
-          domain: "localhost",
-          path: "/",
-          sameSite: "strict", //privent CSRF attacks
+         httpOnly: true,
+  secure: true,         // Required on render
+  sameSite: "none",     // Required for cross-site cookies
+  path: "/",
         };
         res.cookie("jwt", token, cookieOptions);
         return res
