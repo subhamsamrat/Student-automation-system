@@ -19,7 +19,7 @@ const AddResult = () => {
   //---------------get student data from backend ---------------
   const data = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/v1/admin/viewstudents",{params: { department, year },
+      const response = await axios.get("https://student-automation-system.onrender.com/api/v1/admin/viewstudents",{params: { department, year },
      withCredentials: true,
     });
     
@@ -108,7 +108,7 @@ const AddResult = () => {
       }
           console.log('succesfull=',submitResult);
 
-      toast.promise(axios.post("http://localhost:4000/api/v1/admin/addresult", submitResult,{withCredentials: true}),
+      toast.promise(axios.post("https://student-automation-system.onrender.com/api/v1/admin/addresult", submitResult,{withCredentials: true}),
       {
     loading: "Publishing...",
     success: (res) => {
