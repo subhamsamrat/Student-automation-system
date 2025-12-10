@@ -26,7 +26,7 @@ const [history,setHistory]=useState([]);
         
 
                 if(data?.stdId){  
-                  const res=await axios.get(`http://localhost:4000/api/v1/admin/view_payment/${data.stdId}`,{
+                  const res=await axios.get(`https://student-automation-system.onrender.com/api/v1/admin/view_payment/${data.stdId}`,{
                     withCredentials:true,
                     headers:{"Content-Type":"application/json"}
                   });
