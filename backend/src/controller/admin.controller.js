@@ -35,9 +35,10 @@ export const adminLogin = async (req, res) => {
 
     const cookieOption = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+       httpOnly: true,
+  secure: true,        
+  sameSite: "none",   
+  path: "/",
     };
 
      const compPassword =await bcrypt.compare(password, existAdmin.password);
