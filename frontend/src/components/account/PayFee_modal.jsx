@@ -49,7 +49,7 @@ function PayFee_modal({ data }) {
       };
 
       const postReq = await axios.post(
-        `http://localhost:4000/api/v1/admin/payment/${data.stdId}`,
+        `https://student-automation-system.onrender.com/api/v1/admin/payment/${data.stdId}`,
         payload,
         {
           withCredentials: true,
