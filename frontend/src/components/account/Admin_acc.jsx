@@ -29,7 +29,7 @@ function Admin_acc() {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/admin_account",
+        "https://student-automation-system.onrender.com/api/v1/admin/admin_account",
         {
           params: { department, year },
           withCredentials: true,
