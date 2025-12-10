@@ -19,13 +19,13 @@ function Result_modal({ data }) {
       try {
         let apiResponse;
         if(role.role==='admin'){
-            apiResponse = await axios.get('http://localhost:4000/api/v1/admin/viewstudents', {
+            apiResponse = await axios.get('https://student-automation-system.onrender.com/api/v1/admin/viewstudents', {
           params: { department, year },
            withCredentials:true,
         headers:{'Content-Type':'application/json'}
         });   
       }else if(role.role==='student'){
-           apiResponse = await axios.get('http://localhost:4000/api/v1/student/students', {
+           apiResponse = await axios.get('https://student-automation-system.onrender.com/api/v1/student/students', {
           params: { department, year },
            withCredentials:true,
         headers:{'Content-Type':'application/json'}
