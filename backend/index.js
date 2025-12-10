@@ -7,9 +7,7 @@ import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import { v2 as cloudinary } from 'cloudinary'
 import cors from 'cors'
-import cookieParser from 'cookie-parser';
-
-//--experimental-json-modules         
+import cookieParser from 'cookie-parser';         
          
 dotenv.config({
     path:'./.env'
@@ -26,7 +24,6 @@ app.use(fileUpload({
 //configuration
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 app.use(cookieParser());
 
 const corsOptions = {
