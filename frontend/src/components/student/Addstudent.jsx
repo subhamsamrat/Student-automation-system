@@ -44,7 +44,7 @@ function Addstudent() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:4000/api/v1/admin/addstudent",
+        "https://student-automation-system.onrender.com/api/v1/admin/addstudent",
         formData,
         {
           withCredentials: true,
