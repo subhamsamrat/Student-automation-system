@@ -73,7 +73,7 @@ export default function Editstudent({ open, onClose, data }) {
 
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/v1/admin/updatestudent/${data._id}`,
+        `https://student-automation-system.onrender.com/api/v1/admin/updatestudent/${data._id}`,
         formData,
         {
           withCredentials: true,
