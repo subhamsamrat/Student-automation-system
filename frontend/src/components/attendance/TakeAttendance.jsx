@@ -17,7 +17,7 @@ const TakeAttendance = () => {
   const data = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/viewstudents",
+        "https://student-automation-system.onrender.com/api/v1/admin/viewstudents",
         {
           params: { department, year },
           withCredentials: true,
@@ -86,7 +86,7 @@ const TakeAttendance = () => {
 
       toast.promise(
         axios.post(
-          "http://localhost:4000/api/v1/admin/takeattendance",
+          "https://student-automation-system.onrender.com/api/v1/admin/takeattendance",
           TakeAttendancePayload,
           {
             withCredentials: true,
