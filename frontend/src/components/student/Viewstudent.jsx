@@ -31,7 +31,7 @@ export default function Viewstudent() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/admin/viewallstudent",
+        "https://student-automation-system.onrender.com/api/v1/admin/viewallstudent",
         { withCredentials: true }
       );
       setStudents(response.data);
