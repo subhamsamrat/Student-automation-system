@@ -26,7 +26,7 @@ function Attendance() {
   useEffect(() => {
     (async () => {
       const response = await axios.get(
-        "http://localhost:4000/api/v1/student/attendance",
+        "https://student-automation-system.onrender.com/api/v1/student/attendance",
         {
           withCredentials: true,
           headers: { "content-type": "application/json" },
