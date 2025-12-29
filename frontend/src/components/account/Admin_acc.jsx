@@ -71,14 +71,14 @@ function Admin_acc() {
         <h1 className="text-2xl md:text-3xl font-bold">Accounts & Payments Dashboard</h1>
 
         {/* TOP CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-4">
           {[
             {
               title: "Total Fees Collected",
               value: `₹ ${totalCollection}`,
             },
-            { title: "Pending Fees", value: "₹ 3,50,000" },
-            { title: "Students Paid", value: "420" },
+            { title: "Pending Fees", value: "₹ --------" },
+            // { title: "Students Paid", value: "420" },
           ].map((item, i) => (
             <div
               key={i}
@@ -162,10 +162,28 @@ function Admin_acc() {
               onChange={(e) => setYear(e.target.value)}
             >
               <option disabled>By Year</option>
+             {department === '+2-Science' || department === 'MBA' || department === 'MCA' ? (
+            <>
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+            </>
+          ) : department === 'BCA' ||
+            department === 'BBA' ||
+            department === 'BBT' ||
+            department === '+3-Science' ? (
+            <>
+              <option value="1st yr">1st year</option>
+              <option value="2nd yr">2nd year</option>
+              <option value="3rd yr">3rd year</option>
+            </>
+          ) : department === 'B-Tech' ? (
+            <>
               <option value="1st yr">1st year</option>
               <option value="2nd yr">2nd year</option>
               <option value="3rd yr">3rd year</option>
               <option value="4th yr">4th year</option>
+            </>
+          ) : null}
             </select>
 
             <button

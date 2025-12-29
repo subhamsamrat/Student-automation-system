@@ -14,7 +14,9 @@ import { BACKEND_URI } from "@/config";
 
 export default function Viewstudent() {
   const [students, setStudents] = useState([]);
-  const [Data, setData] = useState(null); 
+  const [viewstudent, setViewStd] = useState(null); 
+  const [editStd, setEditStd] = useState(null); 
+  const [dltStd, setDltStd] = useState(null); 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [department, setDepartment] = useState("");
@@ -57,21 +59,19 @@ export default function Viewstudent() {
 
   // open view modal
   const handleViewStd = (student) => {
-    setData(student);
+    setViewStd(student);
     setIsViewOpen(true);
   };
 
   // open edit modal
   const handleEditStd = (student) => {
-    setData(student);
+    setEditStd(student);
     setIsEditOpen(true);
   };
 
   //open delete modal
   const handleDltStd=(student)=>{
-    console.log();
-    
-    setData(student);
+    setDltStd(student);
     setIsDltOpen(true);
   }
 
@@ -247,11 +247,11 @@ export default function Viewstudent() {
   )}
 
   {/* MODALS */}
-  <ViewProfileModal open={isViewOpen} onClose={() =>{ setIsViewOpen(false); setData(null)}} data={Data} />
+  <ViewProfileModal open={isViewOpen} onClose={() =>{ setIsViewOpen(false); setViewStd(null)}} data={viewstudent} />
 
-  <Editstudent open={isEditOpen} onClose={() =>{ setIsEditOpen(false) ;setData(null);}} data={Data} />
+  <Editstudent open={isEditOpen} onClose={() =>{ setIsEditOpen(false) ;setEditStd(null);}} data={editStd} />
 
-  <DltStdModal open={isDltOpen} onClose={() => {setIsDltOpen(false); setData(null);}} data={Data} />
+  <DltStdModal open={isDltOpen} onClose={() => {setIsDltOpen(false); setDltStd(null);}} data={dltStd} />
 </div>
 
     </>

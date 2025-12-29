@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-export default function ViewProfileModal({ data, open }) {
+export default function ViewProfileModal({ data, open, onClose }) {
 
   useEffect(() => {
     if (open) {
@@ -41,7 +41,9 @@ export default function ViewProfileModal({ data, open }) {
 
           <div className="modal-action mt-2 flex justify-center">
             <form method="dialog">
-              <button className="btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 rounded-xl hover:opacity-90">
+              <button
+              onClick={onClose}
+              className="btn bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 rounded-xl hover:opacity-90">
                 Close
               </button>
             </form>

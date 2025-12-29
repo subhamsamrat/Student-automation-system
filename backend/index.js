@@ -26,8 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const corsOptions = {
-  origin: 'https://empower-jx4r.onrender.com', // Your frontend origin
+const corsOptions = { 
+  origin: 'http://localhost:5173', // Your frontend origin
   credentials: true, // Allow credentials (cookies)
    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],

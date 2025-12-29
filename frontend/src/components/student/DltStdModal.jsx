@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-function DltStdModal({ data, open }) {
+function DltStdModal({ data, open,onClose }) {
   const [value, setValue] = useState("");
 
   const deleteKey =typeof data === "string" ? data : data?.student || "";
@@ -39,13 +39,23 @@ function DltStdModal({ data, open }) {
   };
 
   return (
-    <dialog id="DltStdModal" className="modal">
-      <div className="modal-box max-w-sm sm:max-w-md md:max-w-lg bg-white rounded-2xl p-5 shadow-xl">
+    <dialog id="DltStdModal" className="modal" >
+      <div className="modal-box max-w-sm sm:max-w-md md:max-w-lg bg-white rounded-2xl p-5 shadow-xl ">
 
         <h3 className="font-bold text-xl text-gray-800 ">
           Are You Sure Want to Delete Student?
         </h3>
 
+        <form method="dialog">
+         <button
+          className="absolute right-4 top-4 text-gray-600 hover:text-gray-900"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+
+        </form>
+           
         <p className="py-3 text-sm text-gray-600 ">
           <span className="text-red-500 font-semibold">Note:</span> All records
           related to this student will be permanently deleted (Attendance, Exams,

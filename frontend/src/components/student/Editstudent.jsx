@@ -83,7 +83,7 @@ export default function Editstudent({ open, onClose, data }) {
       );
 
       toast.success(response.data.message);
-      onClose();
+     // onClose();
 
     } catch (error) {
       handleAxiosError(error);
