@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -6,6 +7,13 @@ import toast from "react-hot-toast";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { BACKEND_URI } from "@/config";
 import { Loading1 } from "@/utils/Loading";
+=======
+import { Link, Navigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from 'react-hot-toast';
+import { handleAxiosError } from "@/utils/handleAxiosError";
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Login() {
   const {
@@ -13,6 +21,7 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+<<<<<<< HEAD
 
   const [selectedRole, setSelectedRole] = useState("");
   const [loading, setLoading] = useState(false);
@@ -60,12 +69,76 @@ function Login() {
       handleAxiosError(error);
     } finally {
       setLoading(false);
+=======
+  const [selectedRole, setSelectedRole] = useState("");
+  let response;
+  const onSubmit = async (data) => {
+    try {
+
+      if (selectedRole === "student") {
+        response = await axios.post(
+          "https://student-automation-system.onrender.com/api/v1/student/studentlogin",
+          data,
+          {
+            withCredentials: true,
+            headers: { "content-type": "application/json" },
+            credentials: "include",
+          }
+        );
+      
+      } else if (selectedRole === "admin") {
+        response = await axios.post(
+          "https://student-automation-system.onrender.com/api/v1/admin/adminlogin",
+          data,
+          {
+            withCredentials: true,
+            headers: { "content-type": "application/json" },
+            credentials: "include",
+          }
+        );
+        
+      }
+      if (selectedRole === "student") {
+        if (response.data.user) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...response.data.user,
+              role: selectedRole,
+            })
+          );
+        }
+      } else if (selectedRole === "admin") {
+        if (response.data.existAdmin) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              ...response.data.existAdmin.email,
+              role: selectedRole,
+            })
+          );
+        }
+      } else {
+        toast.error("pleas select role !!");
+      }
+
+      toast.success(response.data.message);
+      document.getElementById("login_modal").close();
+      setTimeout(()=>{
+         window.location.reload();
+      },1000);
+      
+    } catch (error) {
+      console.log("ERROR !! in login.jsx", error)
+      handleAxiosError(error);
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
     }
   };
 
   return (
     <>
       <dialog id="login_modal" className="modal">
+<<<<<<< HEAD
         <div className="modal-box relative bg-gradient-to-r from-blue-600">
 
           {loading && (
@@ -78,12 +151,17 @@ function Login() {
           {/* Close button */}
           <button
             disabled={loading}
+=======
+        <div className="modal-box bg-gradient-to-r from-blue-600">
+          <button
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
             onClick={() => document.getElementById("login_modal").close()}
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
           >
             ✕
           </button>
 
+<<<<<<< HEAD
           <form onSubmit={handleSubmit(onSubmit)}>
             <h3 className="font-bold text-lg">Login</h3>
 
@@ -91,16 +169,35 @@ function Login() {
             <div className="flex pt-5 text-[15px]">
               <p>Admin</p>
               <input
+=======
+          <form method="dialog" onSubmit={handleSubmit(onSubmit)}>
+            <h3 className="font-bold text-lg">Login</h3>
+
+            {/* ---- Checkboxes ---- */}
+            <div className="flex pt-5 text-[15px]">
+              <p>Admin:-</p>
+              <input
+                {...register("checkbox", { required: true })}
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
                 type="checkbox"
                 checked={selectedRole === "admin"}
                 onChange={() =>
                   setSelectedRole(selectedRole === "admin" ? "" : "admin")
                 }
+<<<<<<< HEAD
                 className="h-4 w-4 mt-0.5 ml-2"
               />
 
               <p className="ml-5">Student</p>
               <input
+=======
+                className="h-4 w-4 mt-0.5 ml-2  "
+              />
+
+              <p className="ml-5">Student:-</p>
+              <input
+                {...register("checkbox", { required: true })}
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
                 type="checkbox"
                 checked={selectedRole === "student"}
                 onChange={() =>
@@ -108,29 +205,50 @@ function Login() {
                 }
                 className="h-4 w-4 mt-0.5 ml-2"
               />
+<<<<<<< HEAD
             </div>
 
             {/* ---- Inputs ---- */}
+=======
+              {errors.checkbox && (
+                <span className="text-red-500 text-sm ml-5">Select Role</span>
+              )}
+            </div>
+
+            {/* ---- Email and Password Inputs ---- */}
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
             <div className="flex flex-col mt-5">
               <p className="text-sm">Email</p>
               <input
                 {...register("email", { required: true })}
                 type="email"
                 placeholder="Enter your email"
+<<<<<<< HEAD
                 className="h-10 bg-gray-100 rounded-md pl-2 text-sm"
               />
               {errors.email && (
                 <span className="text-red-500 text-sm">
                   Email is required
                 </span>
+=======
+                className="h-10 md:w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200"
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm">Email is required</span>
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
               )}
 
               <p className="text-sm mt-5">Password</p>
               <input
                 {...register("password", { required: true })}
                 type="password"
+<<<<<<< HEAD
                 placeholder="Enter password"
                 className="h-10 bg-gray-100 rounded-md pl-2 text-sm"
+=======
+                placeholder="Enter Password"
+                className="h-10 md:w-100 bg-gray-100 rounded-md pl-2 text-sm hover:bg-gray-200"
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
               />
               {errors.password && (
                 <span className="text-red-500 text-sm">
@@ -141,6 +259,7 @@ function Login() {
 
             {/* ---- Buttons ---- */}
             <div className="flex justify-between mt-5">
+<<<<<<< HEAD
               <button
                 disabled={loading}
                 className="bg-amber-500 h-10 px-6 rounded-md
@@ -152,6 +271,14 @@ function Login() {
               <Link to="/signup" className="text-sm text-gray-500">
                 Not registered?{" "}
                 <u className="text-blue-500">Signup</u>
+=======
+              <button className="bg-amber-500 h-10 w-18 rounded-md">
+                Login
+              </button>
+              <Link to="/signup" className="text-sm text-gray-500">
+                Not registered?{" "}
+                <u className="text-sm text-blue-500 cursor-pointer">Signup</u>
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
               </Link>
             </div>
           </form>

@@ -4,7 +4,10 @@ import { handleAxiosError } from '@/utils/handleAxiosError';
 import axios from 'axios';
 import { Loading2 } from '@/utils/Loading2';
 import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { BACKEND_URI } from '@/config';
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Addstudent() {
 
@@ -45,7 +48,11 @@ function Addstudent() {
       setLoading(true);
 
       const response = await axios.post(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/addstudent`,
+=======
+        "https://student-automation-system.onrender.com/api/v1/admin/addstudent",
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         formData,
         {
           withCredentials: true,
@@ -64,6 +71,11 @@ function Addstudent() {
   return (
     <>
       <Navbar />
+<<<<<<< HEAD
+=======
+
+      {/* FULL SCREEN LOADER OVERLAY */}
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
       {loading && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
           <Loading2 />

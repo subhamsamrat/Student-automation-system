@@ -4,7 +4,10 @@ import axios from "axios";
 import TextField from "@mui/material/TextField";
 import { handleAxiosError } from "@/utils/handleAxiosError";
  import toast from 'react-hot-toast';
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 
 const AddResult = () => {
@@ -20,7 +23,11 @@ const AddResult = () => {
   //---------------get student data from backend ---------------
   const data = async () => {
     try {
+<<<<<<< HEAD
       const response = await axios.get(`${BACKEND_URI}/api/v1/admin/viewstudents`,{params: { department, year },
+=======
+      const response = await axios.get("https://student-automation-system.onrender.com/api/v1/admin/viewstudents",{params: { department, year },
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
      withCredentials: true,
     });
     
@@ -109,7 +116,11 @@ const AddResult = () => {
       }
           console.log('succesfull=',submitResult);
 
+<<<<<<< HEAD
       toast.promise(axios.post(`${BACKEND_URI}/api/v1/admin/addresult`, submitResult,{withCredentials: true}),
+=======
+      toast.promise(axios.post("https://student-automation-system.onrender.com/api/v1/admin/addresult", submitResult,{withCredentials: true}),
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
       {
     loading: "Publishing...",
     success: (res) => {

@@ -1,7 +1,10 @@
 import { handleAxiosError } from '@/utils/handleAxiosError';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+<<<<<<< HEAD
 import { BACKEND_URI } from '@/config';
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Result_modal({ data }) {
   
@@ -20,13 +23,21 @@ function Result_modal({ data }) {
       try {
         let apiResponse;
         if(role.role==='admin'){
+<<<<<<< HEAD
             apiResponse = await axios.get(`${BACKEND_URI}/api/v1/admin/viewstudents`, {
+=======
+            apiResponse = await axios.get('https://student-automation-system.onrender.com/api/v1/admin/viewstudents', {
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
           params: { department, year },
            withCredentials:true,
         headers:{'Content-Type':'application/json'}
         });   
       }else if(role.role==='student'){
+<<<<<<< HEAD
            apiResponse = await axios.get(`${BACKEND_URI}/api/v1/student/students`, {
+=======
+           apiResponse = await axios.get('https://student-automation-system.onrender.com/api/v1/student/students', {
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
           params: { department, year },
            withCredentials:true,
         headers:{'Content-Type':'application/json'}

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -50,7 +53,11 @@ function PayFee_modal({ data }) {
       };
 
       const postReq = await axios.post(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/payment/${data.stdId}`,
+=======
+        `https://student-automation-system.onrender.com/api/v1/admin/payment/${data.stdId}`,
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         payload,
         {
           withCredentials: true,

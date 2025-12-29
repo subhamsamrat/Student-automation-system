@@ -5,7 +5,10 @@ import Login from './Login';
 import axios from 'axios';
 import { handleAxiosError } from '@/utils/handleAxiosError';
 import { toast } from 'react-toastify';
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Signup() {
      
@@ -20,7 +23,11 @@ function Signup() {
   const onSubmit =async(data)=>{
     
     try {
+<<<<<<< HEAD
        const response=await axios.post(`${BACKEND_URI}/api/v1/student/studentsignup`,data);
+=======
+       const response=await axios.post('https://student-automation-system.onrender.com/api/v1/student/studentsignup',data);
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
        console.log('signup successfull');
        toast.success(response.data.message);
        setTimeout(()=>{ navigate('/');},1000)

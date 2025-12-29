@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import toast from "react-hot-toast";
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 export default function Editstudent({ open, onClose, data }) {
   const [loading, setLoading] = useState(false);
@@ -74,7 +77,11 @@ export default function Editstudent({ open, onClose, data }) {
 
     try {
       const response = await axios.put(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/updatestudent/${data._id}`,
+=======
+        `https://student-automation-system.onrender.com/api/v1/admin/updatestudent/${data._id}`,
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         formData,
         {
           withCredentials: true,

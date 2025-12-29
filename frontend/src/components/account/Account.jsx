@@ -4,7 +4,10 @@ import { FaCheckCircle, FaMoneyBillWave, FaWallet } from "react-icons/fa";
 import html2pdf from "html2pdf.js";
 import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Account() {
   const invoiceRef = useRef();
@@ -20,7 +23,11 @@ function Account() {
 
   const fetchData = async () => {
     try {
+<<<<<<< HEAD
       const response = await axios.get(`${BACKEND_URI}/api/v1/student/account`, {
+=======
+      const response = await axios.get("https://student-automation-system.onrender.com/api/v1/student/account", {
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         withCredentials: true,
       });
         console.log(response);

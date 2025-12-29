@@ -13,7 +13,10 @@ import {
 } from "recharts";
 import { authContext } from "../../context/AuthContext.jsx";
 import '../../index.css';
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Attendance() {
   const user = useContext(authContext);
@@ -27,7 +30,11 @@ function Attendance() {
   useEffect(() => {
     (async () => {
       const response = await axios.get(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/student/attendance`,
+=======
+        "https://student-automation-system.onrender.com/api/v1/student/attendance",
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         {
           withCredentials: true,
           headers: { "content-type": "application/json" },

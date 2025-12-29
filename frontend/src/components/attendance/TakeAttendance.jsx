@@ -3,7 +3,10 @@ import Navbar from "../home/Navbar";
 import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import toast from "react-hot-toast";
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 const TakeAttendance = () => {
   const [department, setDepartment] = useState("");
@@ -18,7 +21,11 @@ const TakeAttendance = () => {
   const data = async () => {
     try {
       const response = await axios.get(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/viewstudents`,
+=======
+        "https://student-automation-system.onrender.com/api/v1/admin/viewstudents",
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         {
           params: { department, year },
           withCredentials: true,
@@ -87,7 +94,11 @@ const TakeAttendance = () => {
 
       toast.promise(
         axios.post(
+<<<<<<< HEAD
           `${BACKEND_URI}/api/v1/admin/takeattendance`,
+=======
+          "https://student-automation-system.onrender.com/api/v1/admin/takeattendance",
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
           TakeAttendancePayload,
           {
             withCredentials: true,

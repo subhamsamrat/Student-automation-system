@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
+=======
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -20,7 +23,11 @@ function DltStdModal({ data, open }) {
       if (value.trim() === deleteKey) {
          
          const response = await axios.delete(
+<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/deletestudent/${data.stdId}`,
+=======
+        `https://student-automation-system.onrender.com/api/v1/admin/deletestudent/${data.stdId}`,
+>>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         {
           withCredentials: true,
         }
