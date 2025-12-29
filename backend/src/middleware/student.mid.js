@@ -1,0 +1,20 @@
+import jwt from 'jsonwebtoken';
+import config from '../../config.js';
+
+export default function studentMiddleware(req,res,next){
+ try {
+   const token=req.cookies.jwt;  
+    
+   if(!token){
+        console.log('No token provided');
+        return res.status(401).json({error:'Unauthorize !! Pleas Login First'});
+   } 
+
+       const decoded=jwt.verify(token,config.JWT_USER_SECRET);
+       req.studentId=decoded.id;
+       next();
+ } catch (error) {
+    console.log('invalid token or expire');
+    res.status(401).json({error:'invalid token or expire'});
+ }   
+}
