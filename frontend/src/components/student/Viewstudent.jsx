@@ -17,7 +17,6 @@ export default function Viewstudent() {
   const [Data, setData] = useState(null); 
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
 
@@ -248,11 +247,11 @@ export default function Viewstudent() {
   )}
 
   {/* MODALS */}
-  <ViewProfileModal open={isViewOpen} onClose={() => setIsViewOpen(false)} data={Data} />
+  <ViewProfileModal open={isViewOpen} onClose={() =>{ setIsViewOpen(false); setData(null)}} data={Data} />
 
-  <Editstudent open={isEditOpen} onClose={() => setIsEditOpen(false)} data={Data} />
+  <Editstudent open={isEditOpen} onClose={() =>{ setIsEditOpen(false) ;setData(null);}} data={Data} />
 
-  <DltStdModal open={isDltOpen} onClose={() => setIsDltOpen(false)} data={Data} />
+  <DltStdModal open={isDltOpen} onClose={() => {setIsDltOpen(false); setData(null);}} data={Data} />
 </div>
 
     </>
