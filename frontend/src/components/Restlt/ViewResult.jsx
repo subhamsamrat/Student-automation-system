@@ -5,10 +5,7 @@ import axios from 'axios';
 import Result_modal from './Result_modal.jsx';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { handleAxiosError } from '@/utils/handleAxiosError';
-<<<<<<< HEAD
 import { BACKEND_URI } from '@/config';
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function ViewResult() {
   const [department, setDepartment] = useState('');
@@ -21,11 +18,8 @@ function ViewResult() {
   const fetchData = async () => {
     try {
       setLoading(true);
-<<<<<<< HEAD
       const response = await axios.get(`${BACKEND_URI}/api/v1/admin/viewresults`, {
-=======
-      const response = await axios.get('https://student-automation-system.onrender.com/api/v1/admin/viewresults', {
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
+
         params: { department, year },
         withCredentials:true,
         headers:{'Content-Type':'application/json'}

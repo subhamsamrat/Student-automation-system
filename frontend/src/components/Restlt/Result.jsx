@@ -6,10 +6,7 @@ import html2canvas from "html2canvas";
 import axios from "axios";
 import Result_modal from "./Result_modal.jsx";
 import { handleAxiosError } from "@/utils/handleAxiosError";
-<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Result() {
   const [exam, setExam] = useState([]);
@@ -53,11 +50,8 @@ function Result() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/student/results`,
-=======
-        "https://student-automation-system.onrender.com/api/v1/student/results",
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
+
         { withCredentials: true }
       );
 

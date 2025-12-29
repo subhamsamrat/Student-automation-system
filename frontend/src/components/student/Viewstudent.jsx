@@ -10,10 +10,7 @@ import ViewProfileModal from "./ViewProfile";
 import Editstudent from "../student/Editstudent"; 
 import { MdDelete } from "react-icons/md";
 import DltStdModal from "./DltStdModal";
-<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 export default function Viewstudent() {
   const [students, setStudents] = useState([]);
@@ -35,11 +32,7 @@ export default function Viewstudent() {
     setLoading(true);
     try {
       const response = await axios.get(
-<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/viewallstudent`,
-=======
-        "https://student-automation-system.onrender.com/api/v1/admin/viewallstudent",
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         { withCredentials: true }
       );
       setStudents(response.data);

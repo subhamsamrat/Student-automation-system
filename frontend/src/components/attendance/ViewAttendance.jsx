@@ -4,10 +4,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { Loading1 } from "@/utils/Loading";
-<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function ViewAttendance() {
   const [department, setDepartment] = useState("");
@@ -20,11 +17,7 @@ function ViewAttendance() {
     try {
       setLoading(true);
       const response = await axios.get(
-<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/viewattendance`,
-=======
-        "https://student-automation-system.onrender.com/api/v1/admin/viewattendance",
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
         {
           params: { department, year, filtermonth },
           withCredentials: true,

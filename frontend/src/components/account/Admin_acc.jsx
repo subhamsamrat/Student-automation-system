@@ -15,10 +15,7 @@ import axios from "axios";
 import { handleAxiosError } from "@/utils/handleAxiosError";
 import { FaCcAmazonPay } from "react-icons/fa";
 import { BiSolidUserDetail } from "react-icons/bi";
-<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
 
 function Admin_acc() {
   const [department, setDepartment] = useState();
@@ -33,11 +30,8 @@ function Admin_acc() {
     try {
       setLoading(true);
       const response = await axios.get(
-<<<<<<< HEAD
         `${BACKEND_URI}/api/v1/admin/admin_account`,
-=======
-        "https://student-automation-system.onrender.com/api/v1/admin/admin_account",
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
+
         {
           params: { department, year },
           withCredentials: true,

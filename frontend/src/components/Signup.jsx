@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import Login from './Login';
 import axios from 'axios';
 import { handleAxiosError } from '@/utils/handleAxiosError';
 import { toast } from 'react-toastify';
-<<<<<<< HEAD
 import { BACKEND_URI } from "@/config";
-=======
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
+import { Loading1 } from '@/utils/Loading';
+
 
 function Signup() {
-     
+     const [loading,setLoading]=useState(false);
   const navigate=useNavigate();
           const {
     register,
@@ -23,19 +22,17 @@ function Signup() {
   const onSubmit =async(data)=>{
     
     try {
-<<<<<<< HEAD
+      setLoading(true);
        const response=await axios.post(`${BACKEND_URI}/api/v1/student/studentsignup`,data);
-=======
-       const response=await axios.post('https://student-automation-system.onrender.com/api/v1/student/studentsignup',data);
->>>>>>> 6ad45bcb9dcd07d92a868b9b2c3c577d4a243b18
        console.log('signup successfull');
        toast.success(response.data.message);
        setTimeout(()=>{ navigate('/');},1000)
-     
+     setLoading(false);
     } catch (error) {
 
       console.log('ERROR !! in signup.jsx',error);
-     handleAxiosError(error);    
+     handleAxiosError(error); 
+     setLoading(false);   
     } 
              
     
@@ -46,6 +43,12 @@ function Signup() {
   return (
     <>
        <div className='flex justify-center items-center h-screen w-screen'>
+         {loading && (
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm
+                                    flex items-center justify-center z-50 rounded-lg overflow-hidden">
+                      <Loading1 />
+                    </div>
+                  )}
         <div className='  shadow-2xl box-content rounded-md bg-gradient-to-r from-blue-500 p-5'>
              <div className='flex justify-between items-center rounded-t-md'>
                 <h1 className='text-xl font-bold '>Signup</h1>
@@ -74,8 +77,8 @@ function Signup() {
                             {errors.confirmPassword && <span className='text-red-500 text-sm'>Confirm Password is required</span>}
                    </div>
                    <div className='flex justify-between mt-15'>
-                     <button className='bg-amber-500 h-10 md:w-18 w-20  rounded-md'>Signup</button>
-              <div className="md:ml-50 text-sm text-gray-500">
+                     <button className='bg-amber-500 h-10 md:w-18 w-20  rounded-md  active:scale-95'>Signup</button>
+              <div className="md:ml-50 text-sm text-gray-500 ">
               Have an Account?
             <a
                   className="underline text-blue-600 cursor-pointer"
